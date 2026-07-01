@@ -54,7 +54,6 @@ return function(Tabs)
     Tabs.info:AddSpace({ Height = 20 })
 
     local secGithub = Tabs.info:AddSection("GitHub", "solar/code-square-bold")
-
     secGithub:AddImage({
         Image = "https://linkspreview.netlify.app/fetchimage/https%3A%2F%2Fgithub.com%2FStyearX.png",
         AspectRatio = "16:9",
