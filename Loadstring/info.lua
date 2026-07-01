@@ -2,7 +2,7 @@ return function(Tabs)
     local secDiscord = Tabs.info:AddSection("Discord", "solar/chat-round-bold")
 
     secDiscord:AddDiscord({
-        InviteCode = "",
+        InviteCode = "QBhcVu6c",
     })
 
     secDiscord:AddDivider()
