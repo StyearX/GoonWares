@@ -134,12 +134,9 @@ end
     Tabs.info:AddSpace({ Height = 20 })
     local secGithub = Tabs.info:AddSection("GitHub", "solar/code-square-bold")
 
-    local githubAvatar = GitHubAvatarSystem.GetAvatarAsset("StyearX")
-        or "https://linkspreview.netlify.app/fetchimage/https%3A%2F%2Fgithub.com%2FStyearX.png"
-
     secGithub:AddImage({
-        Image = githubAvatar,
-        AspectRatio = "1:1",
+        Image = https://linkspreview.netlify.app/fetchimage/https%3A%2F%2Fgithub.com%2FStyearX.png,
+        AspectRatio = "16:9",
         Radius = 10,
     })
 
