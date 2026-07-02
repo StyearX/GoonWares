@@ -1,3 +1,4 @@
+-- reference from Hanazono Hakari (The 100 Girlfriends Who Really, Really, Really, Really, Really Love You)
 Fluent:RegisterCustomTheme("Bloomings", {
     Accent = Color3.fromRGB(255, 80, 150),
     AcrylicMain = Color3.fromRGB(40, 15, 30),
