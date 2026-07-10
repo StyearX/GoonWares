@@ -6,9 +6,6 @@ A complete overview of every feature available in the script, organized by tab.
 
 ## Main
 
-### Zoom
-- (removed — no longer part of the script)
-
 ### Nextbot ESP *(collapsible section, red)*
 - Billboard Nextbots — floating name tag above every nextbot
 - Tracer Nextbots — draws a line from your screen to every nextbot
