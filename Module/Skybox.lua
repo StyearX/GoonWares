@@ -10,6 +10,50 @@ BuiltInSkyboxes = {
             { Prop = "SkyboxDn", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Waguri/waguri_dn.png", File = "waguri_dn.png" },
         },
     },
+    ["ItsukiNakano"] = {
+        Folder = "GoonWares/Skyboxes/ItsukiNakano",
+        Faces = {
+            { Prop = "SkyboxBk", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/ItsukiNakano/ItsukiNakano_Bk.png", File = "ItsukiNakano_Bk.png" },
+            { Prop = "SkyboxFt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/ItsukiNakano/ItsukiNakano_Ft.png", File = "ItsukiNakano_Ft.png" },
+            { Prop = "SkyboxLf", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/ItsukiNakano/ItsukiNakano_Lf.png", File = "ItsukiNakano_Lf.png" },
+            { Prop = "SkyboxRt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/ItsukiNakano/ItsukiNakano_Rt.png", File = "ItsukiNakano_Rt.png" },
+            { Prop = "SkyboxUp", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/ItsukiNakano/ItsukiNakano_Up.png", File = "ItsukiNakano_Up.png" },
+            { Prop = "SkyboxDn", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/ItsukiNakano/ItsukiNakano_Dn.png", File = "ItsukiNakano_Dn.png" },
+        },
+    },
+    ["ItsukiNakano2"] = {
+        Folder = "GoonWares/Skyboxes/ItsukiNakano2",
+        Faces = {
+            { Prop = "SkyboxBk", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/ItsukiNakano2/ItsukiNakano2_Bk.png", File = "ItsukiNakano2_Bk.png" },
+            { Prop = "SkyboxFt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/ItsukiNakano2/ItsukiNakano2_Ft.png", File = "ItsukiNakano2_Ft.png" },
+            { Prop = "SkyboxLf", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/ItsukiNakano2/ItsukiNakano2_Lf.png", File = "ItsukiNakano2_Lf.png" },
+            { Prop = "SkyboxRt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/ItsukiNakano2/ItsukiNakano2_Rt.png", File = "ItsukiNakano2_Rt.png" },
+            { Prop = "SkyboxUp", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/ItsukiNakano2/ItsukiNakano2_Up.png", File = "ItsukiNakano2_Up.png" },
+            { Prop = "SkyboxDn", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/ItsukiNakano2/ItsukiNakano2_Dn.png", File = "ItsukiNakano2_Dn.png" },
+        },
+    },
+    ["MaiSakurajima"] = {
+        Folder = "GoonWares/Skyboxes/MaiSakurajima",
+        Faces = {
+            { Prop = "SkyboxUp", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/MaiSakurajima/top.png", File = "top.png" },
+            { Prop = "SkyboxDn", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/MaiSakurajima/down.png", File = "down.png" },
+            { Prop = "SkyboxLf", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/MaiSakurajima/left.png", File = "left.png" },
+            { Prop = "SkyboxRt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/MaiSakurajima/right.png", File = "right.png" },
+            { Prop = "SkyboxFt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/MaiSakurajima/front.png", File = "front.png" },
+            { Prop = "SkyboxBk", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/MaiSakurajima/back.png", File = "back.png" },
+        },
+    },
+    ["MikuNakano"] = {
+        Folder = "GoonWares/Skyboxes/MikuNakano",
+        Faces = {
+            { Prop = "SkyboxBk", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/MikuNakano/MikuNakano_Bk.png", File = "MikuNakano_Bk.png" },
+            { Prop = "SkyboxFt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/MikuNakano/MikuNakano_Ft.png", File = "MikuNakano_Ft.png" },
+            { Prop = "SkyboxLf", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/MikuNakano/MikuNakano_Lf.png", File = "MikuNakano_Lf.png" },
+            { Prop = "SkyboxRt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/MikuNakano/MikuNakano_Rt.png", File = "MikuNakano_Rt.png" },
+            { Prop = "SkyboxUp", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/MikuNakano/MikuNakano_Up.png", File = "MikuNakano_Up.png" },
+            { Prop = "SkyboxDn", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/MikuNakano/MikuNakano_Dn.png", File = "MikuNakano_Dn.png" },
+        },
+    },
     ["Evernight"] = {
         Folder = "GoonWares/Skyboxes/Evernight",
         Faces = {
@@ -196,6 +240,7 @@ SecSkyboxChanger = Tabs.Visual:AddSection("Skybox Changer", "solar/sun-bold")
 SecSkyboxChanger:AddSpace({ Height = 20 })
 SecSkyboxChanger:AddDivider()
 
+
 BuiltInSkyboxNames = {}
 for skyboxName in pairs(BuiltInSkyboxes) do
     table.insert(BuiltInSkyboxNames, skyboxName)
@@ -255,7 +300,7 @@ function ResolveSkyboxInput(value, faceName)
         return "rbxassetid://" .. value
     elseif value:match("^https?://") then
         local ok = pcall(function() makefolder("GoonWares/Skyboxes/Custom") end)
-        local path = "GoonWares/Skyboxes/Custom/" .. faceName .. ".png"
+        local path = "GoonWares/Skyboxes/custom/" .. faceName .. ".png"
         local downloadOk = pcall(function()
             writefile(path, game:HttpGet(value, true))
         end)
@@ -298,7 +343,7 @@ end
 
 SecCustomSkybox:AddInput("CustomSkyboxLf", { Title = "Left (Lf)", Placeholder = "rbxassetid or URL", Callback = function(v) CustomSkyboxInputs.Lf = v end })
 SecCustomSkybox:AddInput("CustomSkyboxRt", { Title = "Right (Rt)", Placeholder = "rbxassetid or URL", Callback = function(v) CustomSkyboxInputs.Rt = v end })
-SecCustomSkybox:AddInput("CustomSkyboxUp", { Title = "Top (Up)", Placeholder = "rbxassetid or URL", Callback = function(v) CustomSkyboxInputs.Up = v end })
+SecCustomSkybox:AddInput("CustomSkyboxUp", { Title = "Up", Placeholder = "rbxassetid or URL", Callback = function(v) CustomSkyboxInputs.Up = v end })
 SecCustomSkybox:AddInput("CustomSkyboxDn", { Title = "Down (Dn)", Placeholder = "rbxassetid or URL", Callback = function(v) CustomSkyboxInputs.Dn = v end })
 SecCustomSkybox:AddInput("CustomSkyboxFt", { Title = "Front (Ft)", Placeholder = "rbxassetid or URL", Callback = function(v) CustomSkyboxInputs.Ft = v end })
 SecCustomSkybox:AddInput("CustomSkyboxBk", { Title = "Back (Bk)", Placeholder = "rbxassetid or URL", Callback = function(v) CustomSkyboxInputs.Bk = v end })
