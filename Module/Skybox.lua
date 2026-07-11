@@ -192,15 +192,9 @@ function ApplyBuiltInSkybox(data)
     SkyInstance.Parent = Lighting
 end
 
-SecEmoteChanger:AddSpace({ Height = 20 })
-
-SecEmoteChanger:AddDivider()
-SecEmoteChanger:AddSpace({ Height = 20 })
-
 SecSkyboxChanger = Tabs.Visual:AddSection("Skybox Changer", "solar/sun-bold")
 SecSkyboxChanger:AddSpace({ Height = 20 })
 SecSkyboxChanger:AddDivider()
-
 
 BuiltInSkyboxNames = {}
 for skyboxName in pairs(BuiltInSkyboxes) do
@@ -304,7 +298,7 @@ end
 
 SecCustomSkybox:AddInput("CustomSkyboxLf", { Title = "Left (Lf)", Placeholder = "rbxassetid or URL", Callback = function(v) CustomSkyboxInputs.Lf = v end })
 SecCustomSkybox:AddInput("CustomSkyboxRt", { Title = "Right (Rt)", Placeholder = "rbxassetid or URL", Callback = function(v) CustomSkyboxInputs.Rt = v end })
-SecCustomSkybox:AddInput("CustomSkyboxUp", { Title = "Up", Placeholder = "rbxassetid or URL", Callback = function(v) CustomSkyboxInputs.Up = v end })
+SecCustomSkybox:AddInput("CustomSkyboxUp", { Title = "Top (Up)", Placeholder = "rbxassetid or URL", Callback = function(v) CustomSkyboxInputs.Up = v end })
 SecCustomSkybox:AddInput("CustomSkyboxDn", { Title = "Down (Dn)", Placeholder = "rbxassetid or URL", Callback = function(v) CustomSkyboxInputs.Dn = v end })
 SecCustomSkybox:AddInput("CustomSkyboxFt", { Title = "Front (Ft)", Placeholder = "rbxassetid or URL", Callback = function(v) CustomSkyboxInputs.Ft = v end })
 SecCustomSkybox:AddInput("CustomSkyboxBk", { Title = "Back (Bk)", Placeholder = "rbxassetid or URL", Callback = function(v) CustomSkyboxInputs.Bk = v end })
