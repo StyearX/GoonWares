@@ -1,6 +1,6 @@
 BuiltInSkyboxes = {
     ["Waguri"] = {
-        Folder = "Waguri",
+        Folder = "GoonWares/Skyboxes/Waguri",
         Faces = {
             { Prop = "SkyboxBk", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Waguri/waguri_ft.png", File = "waguri_ft.png" },
             { Prop = "SkyboxFt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Waguri/waguri_bk.png", File = "waguri_bk.png" },
@@ -11,7 +11,7 @@ BuiltInSkyboxes = {
         },
     },
     ["Evernight"] = {
-        Folder = "Evernight",
+        Folder = "GoonWares/Skyboxes/Evernight",
         Faces = {
             { Prop = "SkyboxBk", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Evernight/evernight_RT.png", File = "SkyRt.png" },
             { Prop = "SkyboxRt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Evernight/evernight_LF.png", File = "SkyIf.png" },
@@ -22,7 +22,7 @@ BuiltInSkyboxes = {
         },
     },
     ["Xenovia Quarta"] = {
-        Folder = "GoonWares Skyboxes/Xenovia Quarta",
+        Folder = "GoonWares/Skyboxes/Xenovia Quarta",
         Faces = {
             { Prop = "SkyboxLf", Url = "https://od.lk/d/NjNfOTg0NjM0ODhf/if.png", File = "if.png" },
             { Prop = "SkyboxBk", Url = "https://od.lk/d/NjNfOTg0NjM0ODlf/ft.png", File = "ft.png" },
@@ -33,7 +33,7 @@ BuiltInSkyboxes = {
         },
     },
     ["Nino Nakano"] = {
-        Folder = "GoonWares Skyboxes/Nino Nakano",
+        Folder = "GoonWares/Skyboxes/Nino Nakano",
         ResetHaze = true,
         Faces = {
             { Prop = "SkyboxRt", Url = "https://od.lk/d/NjNfOTg0NjQyODNf/right1.png", File = "right1.png" },
@@ -45,7 +45,7 @@ BuiltInSkyboxes = {
         },
     },
     ["Nino Nakano 2"] = {
-        Folder = "GoonWares Skyboxes/Nino Nakano 2",
+        Folder = "GoonWares/Skyboxes/Nino Nakano 2",
         ResetHaze = true,
         Faces = {
             { Prop = "SkyboxRt", Url = "https://od.lk/d/NjNfOTg0NjQyNTJf/rt.png", File = "rt.png" },
@@ -57,7 +57,7 @@ BuiltInSkyboxes = {
         },
     },
     ["Saki Saki"] = {
-        Folder = "GoonWares Skyboxes/Saki Saki",
+        Folder = "GoonWares/Skyboxes/Saki Saki",
         ResetHaze = true,
         Faces = {
             { Prop = "SkyboxRt", Url = "https://od.lk/d/NjNfOTg0NjQyNzNf/right.png", File = "right.png" },
@@ -69,7 +69,7 @@ BuiltInSkyboxes = {
         },
     },
     ["Rias Gremory"] = {
-        Folder = "GoonWares Skyboxes/Rias Gremory",
+        Folder = "GoonWares/Skyboxes/Rias Gremory",
         ResetHaze = true,
         Faces = {
             { Prop = "SkyboxRt", Url = "https://od.lk/d/NjNfOTg0NzkyOTFf/RightRias.png", File = "RightRias.png" },
@@ -81,7 +81,7 @@ BuiltInSkyboxes = {
         },
     },
     ["Yotsuba Nakano"] = {
-        Folder = "GoonWares Skyboxes/Yotsuba Nakano",
+        Folder = "GoonWares/Skyboxes/Yotsuba Nakano",
         ResetHaze = true,
         Faces = {
             { Prop = "SkyboxRt", Url = "https://od.lk/d/NjNfOTg0NzkzMzdf/YotsubaRt.png", File = "YotsubaRt.png" },
@@ -93,7 +93,7 @@ BuiltInSkyboxes = {
         },
     },
     ["Hakari Hananozo"] = {
-        Folder = "GoonWares Skyboxes/hk",
+        Folder = "GoonWares/Skyboxes/hk",
         Faces = {
             { Prop = "SkyboxBk", Url = "https://od.lk/d/NjNfOTg0NjEzMTVf/SkyBk.tex", File = "SkyBk.png" },
             { Prop = "SkyboxFt", Url = "https://od.lk/s/NjNfOTg0NjEzMTdf/SkyFt.tex", File = "SkyFt.png" },
@@ -104,7 +104,7 @@ BuiltInSkyboxes = {
         },
     },
     ["Alya"] = {
-        Folder = "GoonWares Skyboxes/Alya",
+        Folder = "GoonWares/Skyboxes/Alya",
         ResetHaze = true,
         Faces = {
             { Prop = "SkyboxRt", Url = "https://od.lk/d/NjNfOTg0NzkzMTZf/Rt.png", File = "Rt.png" },
@@ -116,7 +116,7 @@ BuiltInSkyboxes = {
         },
     },
     ["Alya 2"] = {
-        Folder = "GoonWares Skyboxes/Alya 2",
+        Folder = "GoonWares/Skyboxes/Alya 2",
         ResetHaze = true,
         Faces = {
             { Prop = "SkyboxRt", Url = "https://od.lk/d/NjNfOTg0NzkzMjRf/AlyaRt.png", File = "AlyaRt.png" },
@@ -178,7 +178,7 @@ function ApplyBuiltInSkybox(data)
             SkyInstance[prop] = id
         end
     elseif data.Faces then
-        pcall(function() makefolder("GoonWares Skyboxes") end)
+        pcall(function() makefolder("GoonWares/Skyboxes") end)
         pcall(function() makefolder(data.Folder) end)
         for _, face in ipairs(data.Faces) do
             local path = data.Folder .. "/" .. face.File
@@ -260,8 +260,8 @@ function ResolveSkyboxInput(value, faceName)
     elseif value:match("^%d+$") then
         return "rbxassetid://" .. value
     elseif value:match("^https?://") then
-        local ok = pcall(function() makefolder("GoonWares Custom Skybox") end)
-        local path = "GoonWares Custom Skybox/" .. faceName .. ".png"
+        local ok = pcall(function() makefolder("GoonWares/Skyboxes/Custom") end)
+        local path = "GoonWares/Skyboxes/Custom/" .. faceName .. ".png"
         local downloadOk = pcall(function()
             writefile(path, game:HttpGet(value, true))
         end)
