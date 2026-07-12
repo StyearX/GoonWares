@@ -54,6 +54,39 @@ BuiltInSkyboxes = {
             { Prop = "SkyboxDn", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/MikuNakano/MikuNakano_Dn.png", File = "MikuNakano_Dn.png" },
         },
     },
+    ["TohkaYatogami"] = {
+        Folder = "GoonWares/Skyboxes/TohkaYatogami",
+        Faces = {
+            { Prop = "SkyboxBk", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/TohkaYatogami/TohkaYatogami_BK.png", File = "TohkaYatogami_BK.png" },
+            { Prop = "SkyboxFt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/TohkaYatogami/TohkaYatogami_FT.png", File = "TohkaYatogami_FT.png" },
+            { Prop = "SkyboxLf", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/TohkaYatogami/TohkaYatogami_LF.png", File = "TohkaYatogami_LF.png" },
+            { Prop = "SkyboxRt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/TohkaYatogami/TohkaYatogami_RT.png", File = "TohkaYatogami_RT.png" },
+            { Prop = "SkyboxUp", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/TohkaYatogami/TohkaYatogami_UP.png", File = "TohkaYatogami_UP.png" },
+            { Prop = "SkyboxDn", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/TohkaYatogami/TohkaYatogami_DN.png", File = "TohkaYatogami_DN.png" },
+        },
+    },
+    ["TohkaYatogami2"] = {
+        Folder = "GoonWares/Skyboxes/TohkaYatogami",
+        Faces = {
+            { Prop = "SkyboxBk", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/TohkaYatogami/TohkaYatogami2_BK.png", File = "TohkaYatogami2_BK.png" },
+            { Prop = "SkyboxFt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/TohkaYatogami/TohkaYatogami2_FT.png", File = "TohkaYatogami2_FT.png" },
+            { Prop = "SkyboxLf", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/TohkaYatogami/TohkaYatogami2_LF.png", File = "TohkaYatogami2_LF.png" },
+            { Prop = "SkyboxRt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/TohkaYatogami/TohkaYatogami2_RT.png", File = "TohkaYatogami2_RT.png" },
+            { Prop = "SkyboxUp", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/TohkaYatogami/TohkaYatogami2_UP.png", File = "TohkaYatogami2_UP.png" },
+            { Prop = "SkyboxDn", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/TohkaYatogami/TohkaYatogami2_DN.png", File = "TohkaYatogami2_DN.png" },
+        },
+    },
+    ["LilithAsami"] = {
+        Folder = "GoonWares/Skyboxes/LilithAsami",
+        Faces = {
+            { Prop = "SkyboxBk", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/LilithAsami/LilithAsami_BK.png", File = "LilithAsami_BK.png" },
+            { Prop = "SkyboxFt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/LilithAsami/LilithAsami_FT.png", File = "LilithAsami_FT.png" },
+            { Prop = "SkyboxLf", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/LilithAsami/LilithAsami_LF.png", File = "LilithAsami_LF.png" },
+            { Prop = "SkyboxRt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/LilithAsami/LilithAsami_RT.png", File = "LilithAsami_RT.png" },
+            { Prop = "SkyboxUp", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/LilithAsami/LilithAsami_UP.png", File = "LilithAsami_UP.png" },
+            { Prop = "SkyboxDn", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/LilithAsami/LilithAsami_DN.png", File = "LilithAsami_DN.png" },
+        },
+    },
     ["Evernight"] = {
         Folder = "GoonWares/Skyboxes/Evernight",
         Faces = {
@@ -240,7 +273,6 @@ SecSkyboxChanger = Tabs.Visual:AddSection("Skybox Changer", "solar/sun-bold")
 SecSkyboxChanger:AddSpace({ Height = 20 })
 SecSkyboxChanger:AddDivider()
 
-
 BuiltInSkyboxNames = {}
 for skyboxName in pairs(BuiltInSkyboxes) do
     table.insert(BuiltInSkyboxNames, skyboxName)
@@ -274,20 +306,54 @@ SecSkyboxChanger:AddButton({
     end
 })
 
+SkyboxForceEnabled = false
+SkyboxForceConnection = nil
+SkyboxApplyingNow = false
+
+function ApplySelectedSkyboxSafely()
+    local data = BuiltInSkyboxes[SelectedBuiltInSkybox]
+    if not data then return end
+
+    SkyboxApplyingNow = true
+    pcall(ApplyBuiltInSkybox, data)
+    task.wait(0.2)
+    SkyboxApplyingNow = false
+end
+
+SecSkyboxChanger:AddToggle("SkyboxForceToggle", {Title = "Force Skybox Every Round", Default = false}):OnChanged(function(State)
+    SkyboxForceEnabled = State
+
+    if SkyboxForceConnection then
+        SkyboxForceConnection:Disconnect()
+        SkyboxForceConnection = nil
+    end
+
+    if State then
+        ApplySelectedSkyboxSafely()
+
+        SkyboxForceConnection = Lighting.ChildAdded:Connect(function(child)
+            if not SkyboxForceEnabled then return end
+            if SkyboxApplyingNow then return end
+            if child:IsA("Sky") then
+                task.wait(0.1)
+                ApplySelectedSkyboxSafely()
+            end
+        end)
+    end
+end)
+
 SecSkyboxChanger:AddParagraph({
     Title = "Built-in Skybox Info",
-    Content = "Your executors must have a write file/read file system, and for some skyboxes you will have to wait about 20 seconds to fully load the skybox."
+    Content = "Your executors must have a write file/read file system, and for some skyboxes you will have to wait about 20 seconds to fully load the skybox. Enable 'Force Skybox Every Round' to keep your chosen skybox applied permanently across map/round changes; disable it to let the game's own skybox show normally."
 })
 
 SecSkyboxChanger:AddSpace({ Height = 20 })
-
 SecSkyboxChanger:AddDivider()
 SecSkyboxChanger:AddSpace({ Height = 20 })
 
 SecCustomSkybox = Tabs.Visual:AddSection("Custom Skybox", "solar/gallery-bold")
 SecCustomSkybox:AddSpace({ Height = 20 })
 SecCustomSkybox:AddDivider()
-
 
 CustomSkyboxInputs = { Lf = "", Rt = "", Up = "", Dn = "", Ft = "", Bk = "" }
 
@@ -300,7 +366,7 @@ function ResolveSkyboxInput(value, faceName)
         return "rbxassetid://" .. value
     elseif value:match("^https?://") then
         local ok = pcall(function() makefolder("GoonWares/Skyboxes/Custom") end)
-        local path = "GoonWares/Skyboxes/custom/" .. faceName .. ".png"
+        local path = "GoonWares/Skyboxes/Custom/" .. faceName .. ".png"
         local downloadOk = pcall(function()
             writefile(path, game:HttpGet(value, true))
         end)
