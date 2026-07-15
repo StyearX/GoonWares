@@ -216,13 +216,12 @@ function FloatingButton:Create(ButtonName, DisplayText, IsToggle, OnClick)
 end
 
 function FloatingButton:AddSizeInputs(Section, ButtonName, DisplayText)
-    Section:AddSpace({ Height = 20 })
     Section:AddInput(ButtonName .. "_Size", {
         Title = "Size",
         Placeholder = "200x70",
         Default = "200x70",
         Finished = true,
-        Description = "Format: RealSizeXRealSize (e.g. 200x70)",
+        Description = "Format: ValueXValue (e.g. 200x70)",
         Callback = function(Value)
             local W, H = tostring(Value):match("^(%d+)[xX](%d+)$")
             W = tonumber(W)
@@ -241,7 +240,6 @@ function FloatingButton:AddSizeInputs(Section, ButtonName, DisplayText)
 end
 
 function FloatingButton:AddKeybind(Section, ButtonName, DisplayText, Callback, DefaultKey)
-    Section:AddSpace({ Height = 10 })
     Section:AddKeybind(ButtonName .. "_Keybind", {
         Title = (DisplayText or ButtonName) .. " Keybind",
         Description = "Trigger " .. (DisplayText or ButtonName),
