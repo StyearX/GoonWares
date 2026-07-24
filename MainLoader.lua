@@ -2,6 +2,14 @@ getgenv().BaseURL = "https://raw.githubusercontent.com"
 getgenv().ScriptDirectory = "/StyearX/GoonWares/main/"
 
 local ScriptGroups = {
+    ["Arsenal/Arsenal.lua"] = {
+        name = "Arsenal",
+        placeIds = {
+            112464274410705,
+            286090429,
+            79137385850056,
+        }
+    },
     ["MurderMystery2/GoonWaresMM2.lua"] = {
         name = "Murder Mystery 2",
         placeIds = {
