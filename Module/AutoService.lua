@@ -133,13 +133,14 @@ local function spy(instance)
 	return proxy
 end
 
+local genv = getgenv()
 local export = {}
 local loaded, failed = 0, 0
 
 for _, name in ipairs(SERVICES) do
 	local ok, svc = pcall(game.GetService, game, name)
 	if ok and svc then
-		rawset(_G, name, svc)
+		genv[name] = svc
 		export[name] = svc
 		loaded = loaded + 1
 	else
@@ -149,19 +150,18 @@ end
 
 pcall(function()
 	local lp = game:GetService("Players").LocalPlayer
-	rawset(_G, "LocalPlayer", lp)
+	genv.LocalPlayer = lp
 	export.LocalPlayer = lp
 end)
 
 pcall(function()
-	rawset(_G, "Camera", workspace.CurrentCamera)
+	genv.Camera = workspace.CurrentCamera
 	export.Camera = workspace.CurrentCamera
 end)
 
-rawset(_G, "spy", spy)
+genv.spy = spy
 export.spy = spy
 
 print(("[AutoService] %d injected | %d unavailable"):format(loaded, failed))
 
 return export
-
