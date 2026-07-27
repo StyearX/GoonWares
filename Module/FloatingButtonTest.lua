@@ -61,61 +61,135 @@ local function MakeDraggable(TopbarObject, Object, Locked, Fluent)
     end)
 end
 
-local function ApplyShineAnimation(Frame, Gradient, GradientStroke, Stroke, Fluent)
-    local ShineConn = nil
-    local LastShineState = nil
+local function BuildFrame(ButtonName, SavedW, SavedH, Fluent)
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Name = ButtonName
+    ScreenGui.Parent = LocalPlayer.PlayerGui
+    ScreenGui.ResetOnSpawn = false
+    ScreenGui.DisplayOrder = -2147483648
+    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    ScreenGui.IgnoreGuiInset = false
 
-    local function StartShine()
-        if ShineConn then ShineConn:Disconnect(); ShineConn = nil end
-        local t = 0
-        ShineConn = RunService.RenderStepped:Connect(function(dt)
-            if not Frame or not Frame.Parent then
-                ShineConn:Disconnect()
-                ShineConn = nil
-                return
-            end
+    local Frame = Instance.new("Frame")
+    Frame.Name = ButtonName
+    Frame.Size = UDim2.new(0, SavedW, 0, SavedH)
+    Frame.Position = UDim2.new(0.5, -SavedW / 2, 0.5, -SavedH / 2)
+    Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Frame.BackgroundTransparency = 0.85
+    Frame.ZIndex = -10
+    Frame.Visible = false
+    Frame.Parent = ScreenGui
 
-            local ShineOn = Fluent.ShineEnabled
-            if ShineOn ~= LastShineState then
-                LastShineState = ShineOn
-                if not ShineOn then
-                    Gradient.Rotation = 0
-                    GradientStroke.Rotation = 0
-                end
-            end
+    local Corner = Instance.new("UICorner")
+    Corner.CornerRadius = UDim.new(0, 15)
+    Corner.Parent = Frame
 
-            if ShineOn then
-                t += dt
-                local Speed = 0.5
-                local RotSpeed = 25
+    local Gradient = Instance.new("UIGradient")
+    Gradient.Color = (Fluent:GetButtonGradient() or Fluent.ButtonGradients).Background
+    Gradient.Rotation = 0
+    Gradient.Parent = Frame
 
-                Gradient.Rotation = (t * RotSpeed * 2) % 360
-                GradientStroke.Rotation = (t * RotSpeed) % 360
-                Gradient.Offset = Vector2.new(math.sin(t * 0.6) * 0.18, Gradient.Offset.Y)
+    local Stroke = Instance.new("UIStroke")
+    Stroke.Thickness = 1.5
+    Stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    Stroke.Color = Color3.new(1, 1, 1)
+    Stroke.Parent = Frame
 
-                local Pulse = (math.sin(t * Speed * math.pi) + 1) / 2
+    local GradientStroke = Instance.new("UIGradient")
+    GradientStroke.Color = (Fluent:GetButtonGradient() or Fluent.ButtonGradients).Stroke
+    GradientStroke.Rotation = 0
+    GradientStroke.Parent = Stroke
+
+    local Noise = Instance.new("ImageLabel")
+    Noise.Name = "_FBNoise"
+    Noise.Image = "rbxassetid://9968344227"
+    Noise.ScaleType = Enum.ScaleType.Tile
+    Noise.TileSize = UDim2.new(0, 128, 0, 128)
+    Noise.Size = UDim2.fromScale(1, 1)
+    Noise.BackgroundTransparency = 1
+    Noise.ImageTransparency = 0.92
+    Noise.ZIndex = -8
+    Noise.Parent = Frame
+    local NoiseCorner = Instance.new("UICorner")
+    NoiseCorner.CornerRadius = UDim.new(0, 15)
+    NoiseCorner.Parent = Noise
+
+    local GlassLayer = Instance.new("Frame")
+    GlassLayer.Name = "_FBGlass"
+    GlassLayer.Size = UDim2.fromScale(1, 1)
+    GlassLayer.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    GlassLayer.BackgroundTransparency = 0.88
+    GlassLayer.BorderSizePixel = 0
+    GlassLayer.ZIndex = -9
+    GlassLayer.Parent = Frame
+    local GlassCorner = Instance.new("UICorner")
+    GlassCorner.CornerRadius = UDim.new(0, 15)
+    GlassCorner.Parent = GlassLayer
+    local GlassGradient = Instance.new("UIGradient")
+    GlassGradient.Rotation = 90
+    GlassGradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(180, 180, 180)),
+    })
+    GlassGradient.Parent = GlassLayer
+
+    return ScreenGui, Frame, Corner, Gradient, Stroke, GradientStroke, Noise, NoiseCorner
+end
+
+local function StartFrameLoop(Frame, Gradient, GradientStroke, Stroke, Noise, NoiseCorner, Corner, Fluent)
+    local Conn = nil
+    local t = 0
+
+    Conn = RunService.RenderStepped:Connect(function(dt)
+        if not Frame or not Frame.Parent then
+            Conn:Disconnect()
+            Conn = nil
+            return
+        end
+
+        local Transparent = Fluent.WindowTransparent
+        Frame.BackgroundTransparency = Transparent and 0.85 or 0
+
+        local ShineOn = Fluent.ShineEnabled
+        local Grad = Fluent:GetButtonGradient() or Fluent.ButtonGradients
+
+        if ShineOn then
+            t += dt
+            Gradient.Rotation = (t * 50) % 360
+            GradientStroke.Rotation = (t * 25) % 360
+            Gradient.Offset = Vector2.new(math.sin(t * 0.6) * 0.18, Gradient.Offset.Y)
+
+            local Thm = Fluent.GetShine and Fluent:GetShine()
+            if Thm and Thm.StrokeShine and Thm.StrokeDark and Thm.Accent then
+                local Pulse = (math.sin(t * 0.5 * math.pi) + 1) / 2
+                Stroke.Color = Thm.StrokeDark:Lerp(Thm.Accent, Pulse)
                 Stroke.Thickness = 1.25 + Pulse * 1.25
-
-                local Thm = Fluent and Fluent.Theme and (Fluent.GetShine and Fluent:GetShine())
-                if Thm and Thm.StrokeShine and Thm.StrokeDark and Thm.Accent then
-                    Stroke.Color = Thm.StrokeDark:Lerp(Thm.Accent, Pulse)
-                end
+            else
+                local Pulse = (math.sin(t * 0.5 * math.pi) + 1) / 2
+                GradientStroke.Rotation = (t * 25) % 360
+                Stroke.Thickness = 1.25 + Pulse * 0.75
             end
+        else
+            Gradient.Rotation = 0
+            GradientStroke.Rotation = 0
+            Gradient.Offset = Vector2.new(0, 0)
+            Stroke.Thickness = 1.5
+            Stroke.Color = Color3.new(1, 1, 1)
+        end
 
-            local Grad = Fluent:GetButtonGradient() or Fluent.ButtonGradients
-            Gradient.Color = Grad.Background
-            GradientStroke.Color = Grad.Stroke
+        Gradient.Color = Grad.Background
+        GradientStroke.Color = Grad.Stroke
 
-            local Transparent = Fluent.WindowTransparent
-            local UseAcrylic = Fluent.UseAcrylic
-            local BaseTransp = Transparent and 0.85 or 0
-            Frame.BackgroundTransparency = UseAcrylic and math.max(BaseTransp - 0.25, 0) or BaseTransp
-        end)
-    end
+        local IsCircle = Frame:GetAttribute("IsCircle")
+        local R = IsCircle and UDim.new(1, 0) or UDim.new(0, 15)
+        if Corner.CornerRadius ~= R then
+            Corner.CornerRadius = R
+            NoiseCorner.CornerRadius = R
+        end
+    end)
 
-    StartShine()
     return function()
-        if ShineConn then ShineConn:Disconnect(); ShineConn = nil end
+        if Conn then Conn:Disconnect(); Conn = nil end
     end
 end
 
@@ -145,55 +219,14 @@ function FloatingButton:Create(ButtonName, DisplayText, IsToggle, OnClick)
         end
     end
 
-    local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = ButtonName
-    ScreenGui.Parent = LocalPlayer.PlayerGui
-    ScreenGui.ResetOnSpawn = false
-    ScreenGui.DisplayOrder = -2147483648
-    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    ScreenGui.IgnoreGuiInset = false
+    local ScreenGui, Frame, Corner, Gradient, Stroke, GradientStroke, Noise, NoiseCorner =
+        BuildFrame(ButtonName, SavedW, SavedH, Fluent)
 
-    local Transparent = Fluent.WindowTransparent
-    local UseAcrylic = Fluent.UseAcrylic
-    local BaseTransp = Transparent and 0.85 or 0.7
-    local InitTransp = UseAcrylic and math.max(BaseTransp - 0.25, 0) or BaseTransp
-
-    local Frame = Instance.new("Frame")
-    Frame.Name = ButtonName
-    Frame.Size = UDim2.new(0, SavedW, 0, SavedH)
-    Frame.Position = UDim2.new(0.5, -SavedW / 2, 0.5, -SavedH / 2)
-    Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    Frame.BackgroundTransparency = InitTransp
-    Frame.ZIndex = -10
-    Frame.Visible = false
-    Frame.Parent = ScreenGui
-
-    local Gradient = Instance.new("UIGradient")
-    Gradient.Color = (Fluent:GetButtonGradient() or Fluent.ButtonGradients).Background
-    Gradient.Parent = Frame
-
-    local Stroke = Instance.new("UIStroke")
-    Stroke.Thickness = 1.5
-    Stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-    Stroke.Color = Color3.new(1, 1, 1)
-    Stroke.Parent = Frame
-
-    local GradientStroke = Instance.new("UIGradient")
-    GradientStroke.Color = (Fluent:GetButtonGradient() or Fluent.ButtonGradients).Stroke
-    GradientStroke.Rotation = 0
-    GradientStroke.Parent = Stroke
-
-    local StopShine = ApplyShineAnimation(Frame, Gradient, GradientStroke, Stroke, Fluent)
+    local StopLoop = StartFrameLoop(Frame, Gradient, GradientStroke, Stroke, Noise, NoiseCorner, Corner, Fluent)
 
     Frame.AncestryChanged:Connect(function()
-        if not Frame.Parent then
-            StopShine()
-        end
+        if not Frame.Parent then StopLoop() end
     end)
-
-    local Corner = Instance.new("UICorner")
-    Corner.CornerRadius = UDim.new(0, 15)
-    Corner.Parent = Frame
 
     local Button = Instance.new("TextButton")
     Button.Size = UDim2.new(1, 0, 1, 0)
@@ -203,7 +236,7 @@ function FloatingButton:Create(ButtonName, DisplayText, IsToggle, OnClick)
     Button.TextColor3 = Color3.fromRGB(255, 255, 255)
     Button.TextSize = 24
     Button.TextScaled = false
-    Button.ZIndex = -9
+    Button.ZIndex = -7
     Button.Parent = Frame
 
     local Toggle = Instance.new("TextButton")
@@ -213,7 +246,7 @@ function FloatingButton:Create(ButtonName, DisplayText, IsToggle, OnClick)
     Toggle.Text = "○"
     Toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
     Toggle.Visible = false
-    Toggle.ZIndex = -8
+    Toggle.ZIndex = -6
     Toggle.Parent = Frame
     Instance.new("UICorner", Toggle).CornerRadius = UDim.new(1, 0)
 
@@ -232,6 +265,7 @@ function FloatingButton:Create(ButtonName, DisplayText, IsToggle, OnClick)
             Button.TextScaled = true
             Button.TextSize = math.floor(S * 0.45)
             Corner.CornerRadius = UDim.new(1, 0)
+            NoiseCorner.CornerRadius = UDim.new(1, 0)
             Toggle.Text = "▢"
         else
             local Entry = self.FloatButtonSizes[ButtonName]
@@ -242,6 +276,7 @@ function FloatingButton:Create(ButtonName, DisplayText, IsToggle, OnClick)
             Button.TextScaled = false
             Button.TextSize = 24
             Corner.CornerRadius = UDim.new(0, 15)
+            NoiseCorner.CornerRadius = UDim.new(0, 15)
             Toggle.Text = "○"
         end
     end
