@@ -1,3 +1,4 @@
+-- Nigga dont steal this :<
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
@@ -148,7 +149,7 @@ local function StartFrameLoop(Frame, Gradient, GradientStroke, Stroke, Noise, No
         end
 
         local Transparent = Fluent.WindowTransparent
-        Frame.BackgroundTransparency = Transparent and 0.35 or 0
+        Frame.BackgroundTransparency = Transparent and 0.27 or 0
 
         local ShineOn = Fluent.ShineEnabled
         local Grad = Fluent:GetButtonGradient() or Fluent.ButtonGradients
