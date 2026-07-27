@@ -148,7 +148,7 @@ local function StartFrameLoop(Frame, Gradient, GradientStroke, Stroke, Noise, No
         end
 
         local Transparent = Fluent.WindowTransparent
-        Frame.BackgroundTransparency = Transparent and 0.85 or 0
+        Frame.BackgroundTransparency = Transparent and 0.5 or 0
 
         local ShineOn = Fluent.ShineEnabled
         local Grad = Fluent:GetButtonGradient() or Fluent.ButtonGradients
