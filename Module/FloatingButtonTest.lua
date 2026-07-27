@@ -15,16 +15,6 @@ local function GetThemeProperty(Fluent, Key, Fallback)
     return Fallback
 end
 
-local function GetButtonGradient(Fluent)
-    local Ok, Grad = pcall(function()
-        return Fluent:GetButtonGradient()
-    end)
-    if Ok and Grad then
-        return Grad
-    end
-    return Fluent.ButtonGradients
-end
-
 local function ResolveFont(Fluent)
     local IM = Fluent.InterfaceManager
     if IM and IM.Settings and IM.Settings.Font and IM.FontPaths and IM.FontPaths[IM.Settings.Font] then
@@ -128,6 +118,7 @@ function FloatingButton:Create(ButtonName, DisplayText, IsToggle, OnClick)
     Frame.Position = UDim2.new(0.5, -SavedW / 2, 0.5, -SavedH / 2)
     Frame.BackgroundColor3 = GetThemeProperty(Fluent, "AcrylicMain", Color3.fromRGB(30, 30, 30))
     Frame.BackgroundTransparency = GetThemeProperty(Fluent, "ElementTransparency", 0.1)
+    Frame.BorderSizePixel = 0
     Frame.ZIndex = -10
     Frame.Visible = false
     Frame.Parent = ScreenGui
@@ -136,10 +127,19 @@ function FloatingButton:Create(ButtonName, DisplayText, IsToggle, OnClick)
     Corner.CornerRadius = UDim.new(0, 15)
     Corner.Parent = Frame
 
+    local TintOverlay = Instance.new("Frame")
+    TintOverlay.Name = "Tint"
+    TintOverlay.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    TintOverlay.BackgroundTransparency = 0.4
+    TintOverlay.Size = UDim2.fromScale(1, 1)
+    TintOverlay.ZIndex = -10
+    TintOverlay.Parent = Frame
+    Instance.new("UICorner", TintOverlay).CornerRadius = UDim.new(0, 15)
+
     local TintGradient = Instance.new("UIGradient")
     TintGradient.Rotation = 90
     TintGradient.Color = GetThemeProperty(Fluent, "AcrylicGradient", ColorSequence.new(Color3.fromRGB(255, 255, 255), Color3.fromRGB(255, 255, 255)))
-    TintGradient.Parent = Frame
+    TintGradient.Parent = TintOverlay
 
     local NoiseLayer = Instance.new("ImageLabel")
     NoiseLayer.Name = "Noise"
@@ -153,20 +153,14 @@ function FloatingButton:Create(ButtonName, DisplayText, IsToggle, OnClick)
     NoiseLayer.Parent = Frame
     Instance.new("UICorner", NoiseLayer).CornerRadius = UDim.new(0, 15)
 
-    local Gradient = Instance.new("UIGradient")
-    Gradient.Color = GetButtonGradient(Fluent).Background
-    Gradient.Parent = NoiseLayer
+    local ShineGradient = Instance.new("UIGradient")
+    ShineGradient.Parent = Frame
 
     local Stroke = Instance.new("UIStroke")
     Stroke.Thickness = 1
     Stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     Stroke.Color = GetThemeProperty(Fluent, "AcrylicBorder", Color3.new(1, 1, 1))
     Stroke.Parent = Frame
-
-    local GradientStroke = Instance.new("UIGradient")
-    GradientStroke.Color = GetButtonGradient(Fluent).Stroke
-    GradientStroke.Rotation = 0
-    GradientStroke.Parent = Stroke
 
     local Button = Instance.new("TextButton")
     Button.Size = UDim2.new(1, 0, 1, 0)
@@ -200,28 +194,62 @@ function FloatingButton:Create(ButtonName, DisplayText, IsToggle, OnClick)
         return Fluent.WindowTransparent and true or false
     end
 
+    local function GetShine(Fluent)
+        local Ok, Result = pcall(function()
+            return Fluent:GetShine()
+        end)
+        if Ok and Result then
+            return Result
+        end
+        return nil
+    end
+
+    local ShineTime = 0
+
     task.spawn(function()
         while task.wait(0.03) do
             if not Frame.Parent then break end
 
-            local Grad = GetButtonGradient(Fluent)
             local Transparent = ResolveTransparent()
             local BaseTransparency = GetThemeProperty(Fluent, "ElementTransparency", 0.1)
+            local ShineInfo = GetShine(Fluent)
+            local BorderColor = GetThemeProperty(Fluent, "AcrylicBorder", Stroke.Color)
+            local WindowAnimated = Fluent.ShineEnabled and true or false
+            local Active = WindowAnimated and ShineInfo and ShineInfo.Enabled and ShineInfo.Shine
 
             Frame.BackgroundColor3 = GetThemeProperty(Fluent, "AcrylicMain", Frame.BackgroundColor3)
             Frame.BackgroundTransparency = Transparent and math.clamp(BaseTransparency + 0.55, 0, 0.95) or BaseTransparency
             TintGradient.Color = GetThemeProperty(Fluent, "AcrylicGradient", TintGradient.Color)
             NoiseLayer.ImageTransparency = GetThemeProperty(Fluent, "AcrylicNoise", 0.9)
 
-            Stroke.Color = GetThemeProperty(Fluent, "AcrylicBorder", Stroke.Color)
-            ToggleStroke.Color = Stroke.Color
+            if Active then
+                local Speed = ShineInfo.Shine.Speed or 0.5
+                local RotationSpeed = ShineInfo.Shine.RotationSpeed or 25
+                ShineTime += 0.03 * Speed
+                ShineGradient.Rotation = (ShineTime * RotationSpeed) % 360
+                ShineGradient.Offset = Vector2.new(math.sin(ShineTime * 0.6) * 0.18, ShineGradient.Offset.Y)
+                if ShineInfo.Shine.ColorSequence then
+                    ShineGradient.Color = ShineInfo.Shine.ColorSequence
+                end
+                ShineGradient.Transparency = NumberSequence.new(0)
 
-            if Fluent.ShineEnabled then
-                Gradient.Rotation = (Gradient.Rotation + 1) % 360
-                GradientStroke.Rotation = (GradientStroke.Rotation + 0.5) % 360
+                if ShineInfo.StrokeShine and ShineInfo.StrokeDark and ShineInfo.Accent then
+                    local Pulse = (math.sin(ShineTime) + 1) / 2
+                    Stroke.Thickness = 1.25 + Pulse * 1.25
+                    Stroke.Color = ShineInfo.StrokeDark:Lerp(ShineInfo.Accent, Pulse)
+                else
+                    Stroke.Thickness = 1
+                    Stroke.Color = BorderColor
+                end
+            else
+                ShineTime = 0
+                ShineGradient.Transparency = NumberSequence.new(1)
+                Stroke.Thickness = 1
+                Stroke.Color = BorderColor
             end
-            Gradient.Color = Grad.Background
-            GradientStroke.Color = Grad.Stroke
+
+            ToggleStroke.Thickness = Stroke.Thickness
+            ToggleStroke.Color = Stroke.Color
 
             local NewFont = ResolveFont(Fluent)
             if Button.FontFace ~= NewFont then
@@ -349,4 +377,3 @@ function FloatingButton.SetActive(Button, State, Name)
 end
 
 return FloatingButton
-
