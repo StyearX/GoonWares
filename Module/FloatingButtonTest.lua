@@ -1,40 +1,10 @@
 local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
 local FloatingButton = {}
 FloatingButton.__index = FloatingButton
-
-local function GetThemeProperty(Fluent, Key, Fallback)
-    local Ok, Value = pcall(function()
-        return Fluent:GetThemeProperty(Key)
-    end)
-    if Ok and Value ~= nil then
-        return Value
-    end
-    return Fallback
-end
-
-local function ResolveFont(Fluent)
-    local IM = Fluent.InterfaceManager
-    if IM and IM.Settings and IM.Settings.Font and IM.FontPaths and IM.FontPaths[IM.Settings.Font] then
-        local Ok, F = pcall(function()
-            return Font.new(IM.FontPaths[IM.Settings.Font], Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-        end)
-        if Ok and F then
-            return F
-        end
-    end
-    return Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-end
-
-local function ResolveTextColor(Fluent)
-    return GetThemeProperty(Fluent, "Text", Color3.fromRGB(255, 255, 255))
-end
-
-local function ResolveIconColor(Fluent)
-    return GetThemeProperty(Fluent, "IconColor", ResolveTextColor(Fluent))
-end
 
 local function MakeDraggable(TopbarObject, Object, Locked, Fluent)
     local Dragging, DragInput, DragStart, StartPosition = false, nil, nil, nil
@@ -91,6 +61,64 @@ local function MakeDraggable(TopbarObject, Object, Locked, Fluent)
     end)
 end
 
+local function ApplyShineAnimation(Frame, Gradient, GradientStroke, Stroke, Fluent)
+    local ShineConn = nil
+    local LastShineState = nil
+
+    local function StartShine()
+        if ShineConn then ShineConn:Disconnect(); ShineConn = nil end
+        local t = 0
+        ShineConn = RunService.RenderStepped:Connect(function(dt)
+            if not Frame or not Frame.Parent then
+                ShineConn:Disconnect()
+                ShineConn = nil
+                return
+            end
+
+            local ShineOn = Fluent.ShineEnabled
+            if ShineOn ~= LastShineState then
+                LastShineState = ShineOn
+                if not ShineOn then
+                    Gradient.Rotation = 0
+                    GradientStroke.Rotation = 0
+                end
+            end
+
+            if ShineOn then
+                t += dt
+                local Speed = 0.5
+                local RotSpeed = 25
+
+                Gradient.Rotation = (t * RotSpeed * 2) % 360
+                GradientStroke.Rotation = (t * RotSpeed) % 360
+                Gradient.Offset = Vector2.new(math.sin(t * 0.6) * 0.18, Gradient.Offset.Y)
+
+                local Pulse = (math.sin(t * Speed * math.pi) + 1) / 2
+                Stroke.Thickness = 1.25 + Pulse * 1.25
+
+                local Thm = Fluent and Fluent.Theme and (Fluent.GetShine and Fluent:GetShine())
+                if Thm and Thm.StrokeShine and Thm.StrokeDark and Thm.Accent then
+                    Stroke.Color = Thm.StrokeDark:Lerp(Thm.Accent, Pulse)
+                end
+            end
+
+            local Grad = Fluent:GetButtonGradient() or Fluent.ButtonGradients
+            Gradient.Color = Grad.Background
+            GradientStroke.Color = Grad.Stroke
+
+            local Transparent = Fluent.WindowTransparent
+            local UseAcrylic = Fluent.UseAcrylic
+            local BaseTransp = Transparent and 0.85 or 0
+            Frame.BackgroundTransparency = UseAcrylic and math.max(BaseTransp - 0.25, 0) or BaseTransp
+        end)
+    end
+
+    StartShine()
+    return function()
+        if ShineConn then ShineConn:Disconnect(); ShineConn = nil end
+    end
+end
+
 function FloatingButton.new(Fluent, FloatingButtonManager)
     local Self = setmetatable({}, FloatingButton)
     Self.Fluent = Fluent
@@ -104,6 +132,12 @@ function FloatingButton:Create(ButtonName, DisplayText, IsToggle, OnClick)
     local SavedW = (self.FloatButtonSizes[ButtonName] and self.FloatButtonSizes[ButtonName].W) or 200
     local SavedH = (self.FloatButtonSizes[ButtonName] and self.FloatButtonSizes[ButtonName].H) or 70
 
+    local ClickedText = nil
+    if not IsToggle and type(OnClick) == "string" then
+        ClickedText = OnClick
+        OnClick = nil
+    end
+
     local ScreenGui = Instance.new("ScreenGui")
     ScreenGui.Name = ButtonName
     ScreenGui.Parent = LocalPlayer.PlayerGui
@@ -112,62 +146,54 @@ function FloatingButton:Create(ButtonName, DisplayText, IsToggle, OnClick)
     ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     ScreenGui.IgnoreGuiInset = false
 
+    local Transparent = Fluent.WindowTransparent
+    local UseAcrylic = Fluent.UseAcrylic
+    local BaseTransp = Transparent and 0.85 or 0.7
+    local InitTransp = UseAcrylic and math.max(BaseTransp - 0.25, 0) or BaseTransp
+
     local Frame = Instance.new("Frame")
     Frame.Name = ButtonName
     Frame.Size = UDim2.new(0, SavedW, 0, SavedH)
     Frame.Position = UDim2.new(0.5, -SavedW / 2, 0.5, -SavedH / 2)
-    Frame.BackgroundColor3 = GetThemeProperty(Fluent, "AcrylicMain", Color3.fromRGB(30, 30, 30))
-    Frame.BackgroundTransparency = GetThemeProperty(Fluent, "ElementTransparency", 0.1)
-    Frame.BorderSizePixel = 0
+    Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Frame.BackgroundTransparency = InitTransp
     Frame.ZIndex = -10
     Frame.Visible = false
     Frame.Parent = ScreenGui
+
+    local Gradient = Instance.new("UIGradient")
+    Gradient.Color = (Fluent:GetButtonGradient() or Fluent.ButtonGradients).Background
+    Gradient.Parent = Frame
+
+    local Stroke = Instance.new("UIStroke")
+    Stroke.Thickness = 1.5
+    Stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    Stroke.Color = Color3.new(1, 1, 1)
+    Stroke.Parent = Frame
+
+    local GradientStroke = Instance.new("UIGradient")
+    GradientStroke.Color = (Fluent:GetButtonGradient() or Fluent.ButtonGradients).Stroke
+    GradientStroke.Rotation = 0
+    GradientStroke.Parent = Stroke
+
+    local StopShine = ApplyShineAnimation(Frame, Gradient, GradientStroke, Stroke, Fluent)
+
+    Frame.AncestryChanged:Connect(function()
+        if not Frame.Parent then
+            StopShine()
+        end
+    end)
 
     local Corner = Instance.new("UICorner")
     Corner.CornerRadius = UDim.new(0, 15)
     Corner.Parent = Frame
 
-    local TintOverlay = Instance.new("Frame")
-    TintOverlay.Name = "Tint"
-    TintOverlay.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    TintOverlay.BackgroundTransparency = 0.4
-    TintOverlay.Size = UDim2.fromScale(1, 1)
-    TintOverlay.ZIndex = -10
-    TintOverlay.Parent = Frame
-    Instance.new("UICorner", TintOverlay).CornerRadius = UDim.new(0, 15)
-
-    local TintGradient = Instance.new("UIGradient")
-    TintGradient.Rotation = 90
-    TintGradient.Color = GetThemeProperty(Fluent, "AcrylicGradient", ColorSequence.new(Color3.fromRGB(255, 255, 255), Color3.fromRGB(255, 255, 255)))
-    TintGradient.Parent = TintOverlay
-
-    local NoiseLayer = Instance.new("ImageLabel")
-    NoiseLayer.Name = "Noise"
-    NoiseLayer.BackgroundTransparency = 1
-    NoiseLayer.Image = "rbxassetid://9968344227"
-    NoiseLayer.ImageTransparency = GetThemeProperty(Fluent, "AcrylicNoise", 0.9)
-    NoiseLayer.ScaleType = Enum.ScaleType.Tile
-    NoiseLayer.TileSize = UDim2.new(0, 128, 0, 128)
-    NoiseLayer.Size = UDim2.new(1, 0, 1, 0)
-    NoiseLayer.ZIndex = -9
-    NoiseLayer.Parent = Frame
-    Instance.new("UICorner", NoiseLayer).CornerRadius = UDim.new(0, 15)
-
-    local ShineGradient = Instance.new("UIGradient")
-    ShineGradient.Parent = Frame
-
-    local Stroke = Instance.new("UIStroke")
-    Stroke.Thickness = 1
-    Stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-    Stroke.Color = GetThemeProperty(Fluent, "AcrylicBorder", Color3.new(1, 1, 1))
-    Stroke.Parent = Frame
-
     local Button = Instance.new("TextButton")
     Button.Size = UDim2.new(1, 0, 1, 0)
     Button.BackgroundTransparency = 1
     Button.Text = IsToggle and (DisplayText .. ": OFF") or DisplayText
-    Button.FontFace = ResolveFont(Fluent)
-    Button.TextColor3 = ResolveTextColor(Fluent)
+    Button.Font = Enum.Font.SourceSansBold
+    Button.TextColor3 = Color3.fromRGB(255, 255, 255)
     Button.TextSize = 24
     Button.TextScaled = false
     Button.ZIndex = -9
@@ -176,92 +202,17 @@ function FloatingButton:Create(ButtonName, DisplayText, IsToggle, OnClick)
     local Toggle = Instance.new("TextButton")
     Toggle.Size = UDim2.new(0, 28, 0, 28)
     Toggle.Position = UDim2.new(1, 6, 0.5, -14)
-    Toggle.BackgroundColor3 = GetThemeProperty(Fluent, "Element", Color3.fromRGB(40, 40, 40))
-    Toggle.Text = "O"
-    Toggle.FontFace = ResolveFont(Fluent)
-    Toggle.TextColor3 = ResolveIconColor(Fluent)
+    Toggle.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    Toggle.Text = "○"
+    Toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
     Toggle.Visible = false
     Toggle.ZIndex = -8
     Toggle.Parent = Frame
     Instance.new("UICorner", Toggle).CornerRadius = UDim.new(1, 0)
 
-    local ToggleStroke = Instance.new("UIStroke")
-    ToggleStroke.Thickness = 1
-    ToggleStroke.Color = GetThemeProperty(Fluent, "AcrylicBorder", Color3.new(1, 1, 1))
-    ToggleStroke.Parent = Toggle
-
-    local function ResolveTransparent()
-        return Fluent.WindowTransparent and true or false
-    end
-
-    local function GetShine(Fluent)
-        local Ok, Result = pcall(function()
-            return Fluent:GetShine()
-        end)
-        if Ok and Result then
-            return Result
-        end
-        return nil
-    end
-
-    local ShineTime = 0
-
-    task.spawn(function()
-        while task.wait(0.03) do
-            if not Frame.Parent then break end
-
-            local Transparent = ResolveTransparent()
-            local BaseTransparency = GetThemeProperty(Fluent, "ElementTransparency", 0.1)
-            local ShineInfo = GetShine(Fluent)
-            local BorderColor = GetThemeProperty(Fluent, "AcrylicBorder", Stroke.Color)
-            local WindowAnimated = Fluent.ShineEnabled and true or false
-            local Active = WindowAnimated and ShineInfo and ShineInfo.Enabled and ShineInfo.Shine
-
-            Frame.BackgroundColor3 = GetThemeProperty(Fluent, "AcrylicMain", Frame.BackgroundColor3)
-            Frame.BackgroundTransparency = Transparent and math.clamp(BaseTransparency + 0.55, 0, 0.95) or BaseTransparency
-            TintGradient.Color = GetThemeProperty(Fluent, "AcrylicGradient", TintGradient.Color)
-            NoiseLayer.ImageTransparency = GetThemeProperty(Fluent, "AcrylicNoise", 0.9)
-
-            if Active then
-                local Speed = ShineInfo.Shine.Speed or 0.5
-                local RotationSpeed = ShineInfo.Shine.RotationSpeed or 25
-                ShineTime += 0.03 * Speed
-                ShineGradient.Rotation = (ShineTime * RotationSpeed) % 360
-                ShineGradient.Offset = Vector2.new(math.sin(ShineTime * 0.6) * 0.18, ShineGradient.Offset.Y)
-                if ShineInfo.Shine.ColorSequence then
-                    ShineGradient.Color = ShineInfo.Shine.ColorSequence
-                end
-                ShineGradient.Transparency = NumberSequence.new(0)
-
-                if ShineInfo.StrokeShine and ShineInfo.StrokeDark and ShineInfo.Accent then
-                    local Pulse = (math.sin(ShineTime) + 1) / 2
-                    Stroke.Thickness = 1.25 + Pulse * 1.25
-                    Stroke.Color = ShineInfo.StrokeDark:Lerp(ShineInfo.Accent, Pulse)
-                else
-                    Stroke.Thickness = 1
-                    Stroke.Color = BorderColor
-                end
-            else
-                ShineTime = 0
-                ShineGradient.Transparency = NumberSequence.new(1)
-                Stroke.Thickness = 1
-                Stroke.Color = BorderColor
-            end
-
-            ToggleStroke.Thickness = Stroke.Thickness
-            ToggleStroke.Color = Stroke.Color
-
-            local NewFont = ResolveFont(Fluent)
-            if Button.FontFace ~= NewFont then
-                Button.FontFace = NewFont
-                Toggle.FontFace = NewFont
-            end
-            Button.TextColor3 = ResolveTextColor(Fluent)
-            Toggle.TextColor3 = ResolveIconColor(Fluent)
-        end
-    end)
-
     local Holding, HoldStart, HideAt = false, 0, 0
+    local OriginalDisplayText = DisplayText
+    local IsClicked = false
 
     Frame:SetAttribute("IsCircle", false)
 
@@ -274,7 +225,7 @@ function FloatingButton:Create(ButtonName, DisplayText, IsToggle, OnClick)
             Button.TextScaled = true
             Button.TextSize = math.floor(S * 0.45)
             Corner.CornerRadius = UDim.new(1, 0)
-            Toggle.Text = "#"
+            Toggle.Text = "▢"
         else
             local Entry = self.FloatButtonSizes[ButtonName]
             local LiveW = Entry and Entry.W or SavedW
@@ -284,7 +235,7 @@ function FloatingButton:Create(ButtonName, DisplayText, IsToggle, OnClick)
             Button.TextScaled = false
             Button.TextSize = 24
             Corner.CornerRadius = UDim.new(0, 15)
-            Toggle.Text = "O"
+            Toggle.Text = "○"
         end
     end
 
@@ -321,9 +272,25 @@ function FloatingButton:Create(ButtonName, DisplayText, IsToggle, OnClick)
         HideAt = tick()
         ApplyShape(not Frame:GetAttribute("IsCircle"))
     end)
-    Button.Activated:Connect(function()
-        if OnClick then OnClick(Button) end
-    end)
+
+    if not IsToggle and ClickedText then
+        Button.Activated:Connect(function()
+            if IsClicked then return end
+            IsClicked = true
+            Button.Text = ClickedText
+            task.delay(1.2, function()
+                if Button and Button.Parent then
+                    Button.Text = OriginalDisplayText
+                    IsClicked = false
+                end
+            end)
+            if OnClick then OnClick(Button) end
+        end)
+    else
+        Button.Activated:Connect(function()
+            if OnClick then OnClick(Button) end
+        end)
+    end
 
     MakeDraggable(Button, Frame, false, Fluent)
 
