@@ -133,9 +133,16 @@ function FloatingButton:Create(ButtonName, DisplayText, IsToggle, OnClick)
     local SavedH = (self.FloatButtonSizes[ButtonName] and self.FloatButtonSizes[ButtonName].H) or 70
 
     local ClickedText = nil
-    if not IsToggle and type(OnClick) == "string" then
-        ClickedText = OnClick
-        OnClick = nil
+    local ClickCallback = nil
+    if not IsToggle then
+        if type(OnClick) == "string" then
+            ClickedText = OnClick
+            OnClick = nil
+        elseif type(OnClick) == "table" then
+            ClickedText = OnClick.Text
+            ClickCallback = OnClick.Callback
+            OnClick = nil
+        end
     end
 
     local ScreenGui = Instance.new("ScreenGui")
@@ -284,7 +291,7 @@ function FloatingButton:Create(ButtonName, DisplayText, IsToggle, OnClick)
                     IsClicked = false
                 end
             end)
-            if OnClick then OnClick(Button) end
+            if ClickCallback then task.spawn(ClickCallback, Button) end
         end)
     else
         Button.Activated:Connect(function()
