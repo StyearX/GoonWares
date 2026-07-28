@@ -134,10 +134,10 @@ local function BuildFrame(ButtonName, SavedW, SavedH, Fluent)
     })
     GlassGradient.Parent = GlassLayer
 
-    return ScreenGui, Frame, Corner, Gradient, Stroke, GradientStroke, Noise, NoiseCorner
+    return ScreenGui, Frame, Corner, Gradient, Stroke, GradientStroke, Noise, NoiseCorner, GlassLayer, GlassCorner, GlassGradient
 end
 
-local function StartFrameLoop(Frame, Gradient, GradientStroke, Stroke, Noise, NoiseCorner, Corner, Fluent)
+local function StartFrameLoop(Frame, Gradient, GradientStroke, Stroke, Noise, NoiseCorner, Corner, GlassLayer, GlassCorner, Fluent)
     local Conn = nil
     local t = 0
 
@@ -161,7 +161,6 @@ local function StartFrameLoop(Frame, Gradient, GradientStroke, Stroke, Noise, No
             GradientStroke.Rotation = (t * 15) % 360
             Gradient.Offset = Vector2.new(math.sin(t * 0.4) * 0.15, Gradient.Offset.Y)
             
-            -- Pulse effect on stroke thickness
             local Pulse = (math.sin(t * 0.5 * math.pi) + 1) / 2
             Stroke.Thickness = 1.25 + Pulse * 0.75
         else
@@ -172,15 +171,17 @@ local function StartFrameLoop(Frame, Gradient, GradientStroke, Stroke, Noise, No
             Stroke.Color = Color3.new(1, 1, 1)
         end
 
-        -- Always apply ButtonGradient
         Gradient.Color = Grad.Background
         GradientStroke.Color = Grad.Stroke
 
         local IsCircle = Frame:GetAttribute("IsCircle")
         local R = IsCircle and UDim.new(1, 0) or UDim.new(0, 15)
+        
+        -- Update all corners to keep them in sync
         if Corner.CornerRadius ~= R then
             Corner.CornerRadius = R
             NoiseCorner.CornerRadius = R
+            GlassCorner.CornerRadius = R
         end
     end)
 
@@ -215,10 +216,10 @@ function FloatingButton:Create(ButtonName, DisplayText, IsToggle, OnClick)
         end
     end
 
-    local ScreenGui, Frame, Corner, Gradient, Stroke, GradientStroke, Noise, NoiseCorner =
+    local ScreenGui, Frame, Corner, Gradient, Stroke, GradientStroke, Noise, NoiseCorner, GlassLayer, GlassCorner, GlassGradient =
         BuildFrame(ButtonName, SavedW, SavedH, Fluent)
 
-    local StopLoop = StartFrameLoop(Frame, Gradient, GradientStroke, Stroke, Noise, NoiseCorner, Corner, Fluent)
+    local StopLoop = StartFrameLoop(Frame, Gradient, GradientStroke, Stroke, Noise, NoiseCorner, Corner, GlassLayer, GlassCorner, Fluent)
 
     Frame.AncestryChanged:Connect(function()
         if not Frame.Parent then StopLoop() end
@@ -260,8 +261,13 @@ function FloatingButton:Create(ButtonName, DisplayText, IsToggle, OnClick)
             Button.TextWrapped = true
             Button.TextScaled = true
             Button.TextSize = math.floor(S * 0.45)
-            Corner.CornerRadius = UDim.new(1, 0)
-            NoiseCorner.CornerRadius = UDim.new(1, 0)
+            
+            -- Update all corners to circle
+            local R = UDim.new(1, 0)
+            Corner.CornerRadius = R
+            NoiseCorner.CornerRadius = R
+            GlassCorner.CornerRadius = R
+            
             Toggle.Text = "▢"
         else
             local Entry = self.FloatButtonSizes[ButtonName]
@@ -271,8 +277,13 @@ function FloatingButton:Create(ButtonName, DisplayText, IsToggle, OnClick)
             Button.TextWrapped = false
             Button.TextScaled = false
             Button.TextSize = 24
-            Corner.CornerRadius = UDim.new(0, 15)
-            NoiseCorner.CornerRadius = UDim.new(0, 15)
+            
+            -- Update all corners to rounded rectangle
+            local R = UDim.new(0, 15)
+            Corner.CornerRadius = R
+            NoiseCorner.CornerRadius = R
+            GlassCorner.CornerRadius = R
+            
             Toggle.Text = "○"
         end
     end
