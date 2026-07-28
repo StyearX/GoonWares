@@ -151,32 +151,16 @@ local function StartFrameLoop(Frame, Gradient, GradientStroke, Stroke, Noise, No
         local Transparent = Fluent.WindowTransparent
         Frame.BackgroundTransparency = Transparent and 0.27 or 0
 
-        local ShineOn = Fluent.ShineEnabled
+        -- Always use ButtonGradient.
         local Grad = Fluent:GetButtonGradient() or Fluent.ButtonGradients
-
-        if ShineOn then
-            t += dt
-            Gradient.Rotation = (t * 50) % 360
-            GradientStroke.Rotation = (t * 25) % 360
-            Gradient.Offset = Vector2.new(math.sin(t * 0.6) * 0.18, Gradient.Offset.Y)
-
-            local Thm = Fluent.GetShine and Fluent:GetShine()
-            if Thm and Thm.StrokeShine and Thm.StrokeDark and Thm.Accent then
-                local Pulse = (math.sin(t * 0.5 * math.pi) + 1) / 2
-                Stroke.Color = Thm.StrokeDark:Lerp(Thm.Accent, Pulse)
-                Stroke.Thickness = 1.25 + Pulse * 1.25
-            else
-                local Pulse = (math.sin(t * 0.5 * math.pi) + 1) / 2
-                GradientStroke.Rotation = (t * 25) % 360
-                Stroke.Thickness = 1.25 + Pulse * 0.75
-            end
-        else
-            Gradient.Rotation = 0
-            GradientStroke.Rotation = 0
-            Gradient.Offset = Vector2.new(0, 0)
-            Stroke.Thickness = 1.5
-            Stroke.Color = Color3.new(1, 1, 1)
-        end
+        
+        t += dt
+        Gradient.Rotation = (t * 30) % 360
+        GradientStroke.Rotation = (t * 15) % 360
+        Gradient.Offset = Vector2.new(math.sin(t * 0.4) * 0.15, Gradient.Offset.Y)
+        
+        local Pulse = (math.sin(t * 0.5 * math.pi) + 1) / 2
+        Stroke.Thickness = 1.25 + Pulse * 0.75
 
         Gradient.Color = Grad.Background
         GradientStroke.Color = Grad.Stroke
