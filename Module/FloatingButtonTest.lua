@@ -67,7 +67,7 @@ local function BuildFrame(ButtonName, SavedW, SavedH, Fluent)
     ScreenGui.Name = ButtonName
     ScreenGui.Parent = LocalPlayer.PlayerGui
     ScreenGui.ResetOnSpawn = false
-    ScreenGui.DisplayOrder = -2147483648
+    ScreenGui.DisplayOrder = 0.9
     ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     ScreenGui.IgnoreGuiInset = false
 
