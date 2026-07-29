@@ -90,7 +90,7 @@ local function BuildFrame(ButtonName, SavedW, SavedH, Fluent)
     ScreenGui.Name = ButtonName
     ScreenGui.Parent = ButtonFolder
     ScreenGui.ResetOnSpawn = false
-    ScreenGui.DisplayOrder = 0.9
+    ScreenGui.DisplayOrder = 0
     ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     ScreenGui.IgnoreGuiInset = false
 
