@@ -62,12 +62,12 @@ local function MakeDraggable(TopbarObject, Object, Locked, Fluent)
 end
 
 local function GetOrCreateFloatingButtonFolder(ButtonName)
-    local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
-    local GoonWaresRoot = PlayerGui:FindFirstChild("GoonWares")
+    local CoreGui = game:GetService("CoreGui")
+    local GoonWaresRoot = CoreGui:FindFirstChild("GoonWares")
     if not GoonWaresRoot then
         GoonWaresRoot = Instance.new("Folder")
         GoonWaresRoot.Name = "GoonWares"
-        GoonWaresRoot.Parent = PlayerGui
+        GoonWaresRoot.Parent = CoreGui
     end
     local FloatingRoot = GoonWaresRoot:FindFirstChild("FloatingButton")
     if not FloatingRoot then
