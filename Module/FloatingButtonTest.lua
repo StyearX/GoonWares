@@ -77,7 +77,7 @@ local function BuildFrame(ButtonName, SavedW, SavedH, Fluent)
     Frame.Position = UDim2.new(0.5, -SavedW / 2, 0.5, -SavedH / 2)
     Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     Frame.BackgroundTransparency = 0.85
-    Frame.ZIndex = 1
+    Frame.ZIndex = 10
     Frame.Visible = false
     Frame.Parent = ScreenGui
 
