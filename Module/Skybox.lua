@@ -1,4 +1,5 @@
 -- Roblox Exploiting Getting Crazy with Porn Skybox😭
+-- Credit To https://youtube.com/@r0l1?si=ecl7FwqRWTAnR0w5 , https://pvprp.com/profile/xThonyG , https://pvprp.com/profile/SVENZZY8
 BuiltInSkyboxes = {
     ["Waguri"] = {
         Folder = "GoonWares/Skyboxes/Waguri",
