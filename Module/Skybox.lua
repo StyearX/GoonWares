@@ -34,6 +34,17 @@ BuiltInSkyboxes = {
 	        { Prop = "SkyboxDn", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Cryene/down.png", File = "down.png" },
        },
     },
+    ["Castorice"] = {
+        Folder = "GoonWares/Skyboxes/Castorice",
+        Faces = {
+        	{ Prop = "SkyboxBk", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Castorice/back.png", File = "back.png" },
+	        { Prop = "SkyboxFt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Castorice/front.png", File = "front.png" },
+	        { Prop = "SkyboxLf", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Castorice/left.png", File = "left.png" },
+        	{ Prop = "SkyboxRt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Castorice/right.png", File = "right.png" },
+	        { Prop = "SkyboxUp", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Castorice/top.png", File = "top.png" },
+	        { Prop = "SkyboxDn", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Castorice/down.png", File = "down.png" },
+       },
+    },
     ["ItsukiNakano"] = {
         Folder = "GoonWares/Skyboxes/ItsukiNakano",
         Faces = {
