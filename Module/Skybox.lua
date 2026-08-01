@@ -1,3 +1,4 @@
+-- Roblox Exploiting Getting Crazy with Porn Skybox😭
 BuiltInSkyboxes = {
     ["Waguri"] = {
         Folder = "GoonWares/Skyboxes/Waguri",
@@ -9,6 +10,28 @@ BuiltInSkyboxes = {
             { Prop = "SkyboxUp", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Waguri/waguri_up.png", File = "waguri_up.png" },
             { Prop = "SkyboxDn", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Waguri/waguri_dn.png", File = "waguri_dn.png" },
         },
+    },
+    ["Reynai"] = {
+        Folder = "GoonWares/Skyboxes/Reynai",
+        Faces = {
+        	{ Prop = "SkyboxBk", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Reynai/back.png", File = "back.png" },
+	        { Prop = "SkyboxFt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Reynai/front.png", File = "front.png" },
+	        { Prop = "SkyboxLf", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Reynai/left.png", File = "left.png" },
+        	{ Prop = "SkyboxRt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Reynai/right.png", File = "right.png" },
+	        { Prop = "SkyboxUp", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Reynai/top.png", File = "top.png" },
+	        { Prop = "SkyboxDn", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Reynai/down.png", File = "down.png" },
+       },
+    },
+    ["Cryene"] = {
+        Folder = "GoonWares/Skyboxes/cryene",
+        Faces = {
+        	{ Prop = "SkyboxBk", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Cryene/back.png", File = "back.png" },
+	        { Prop = "SkyboxFt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Cryene/front.png", File = "front.png" },
+	        { Prop = "SkyboxLf", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Cryene/left.png", File = "left.png" },
+        	{ Prop = "SkyboxRt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Cryene/right.png", File = "right.png" },
+	        { Prop = "SkyboxUp", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Cryene/Top.png", File = "top.png" },
+	        { Prop = "SkyboxDn", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Cryene/down.png", File = "down.png" },
+       },
     },
     ["ItsukiNakano"] = {
         Folder = "GoonWares/Skyboxes/ItsukiNakano",
@@ -91,7 +114,7 @@ BuiltInSkyboxes = {
         Folder = "GoonWares/Skyboxes/Evernight",
         Faces = {
             { Prop = "SkyboxBk", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Evernight/evernight_RT.png", File = "SkyRt.png" },
-            { Prop = "SkyboxRt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Evernight/evernight_LF.png", File = "SkyIf.png" },
+            { Prop = "SkyboxRt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Evernight/evernight_LF.png", File = "SkyLf.png" },
             { Prop = "SkyboxLf", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Evernight/evernight_BK.png", File = "SkyBk.png" },
             { Prop = "SkyboxFt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Evernight/evernight_FT.png", File = "SkyFt.png" },
             { Prop = "SkyboxUp", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Evernight/evernight_UP.png", File = "SkyUp.png" },
@@ -99,7 +122,8 @@ BuiltInSkyboxes = {
         },
     },
     ["Xenovia Quarta"] = {
-        Folder = "GoonWares/Skyboxes/Xenovia Quarta",
+        Folder = "GoonWares/Skyboxes/XenoviaQuarta",
+        ResetHaze = true,
         Faces = {
             { Prop = "SkyboxLf", Url = "https://od.lk/d/NjNfOTg0NjM0ODhf/if.png", File = "if.png" },
             { Prop = "SkyboxBk", Url = "https://od.lk/d/NjNfOTg0NjM0ODlf/ft.png", File = "ft.png" },
@@ -110,7 +134,7 @@ BuiltInSkyboxes = {
         },
     },
     ["Nino Nakano"] = {
-        Folder = "GoonWares/Skyboxes/Nino Nakano",
+        Folder = "GoonWares/Skyboxes/NinoNakano",
         ResetHaze = true,
         Faces = {
             { Prop = "SkyboxRt", Url = "https://od.lk/d/NjNfOTg0NjQyODNf/right1.png", File = "right1.png" },
@@ -122,7 +146,7 @@ BuiltInSkyboxes = {
         },
     },
     ["Nino Nakano 2"] = {
-        Folder = "GoonWares/Skyboxes/Nino Nakano 2",
+        Folder = "GoonWares/Skyboxes/NinoNakano2",
         ResetHaze = true,
         Faces = {
             { Prop = "SkyboxRt", Url = "https://od.lk/d/NjNfOTg0NjQyNTJf/rt.png", File = "rt.png" },
@@ -134,7 +158,7 @@ BuiltInSkyboxes = {
         },
     },
     ["Saki Saki"] = {
-        Folder = "GoonWares/Skyboxes/Saki Saki",
+        Folder = "GoonWares/Skyboxes/SakiSaki",
         ResetHaze = true,
         Faces = {
             { Prop = "SkyboxRt", Url = "https://od.lk/d/NjNfOTg0NjQyNzNf/right.png", File = "right.png" },
@@ -146,7 +170,7 @@ BuiltInSkyboxes = {
         },
     },
     ["Rias Gremory"] = {
-        Folder = "GoonWares/Skyboxes/Rias Gremory",
+        Folder = "GoonWares/Skyboxes/RiasGremory",
         ResetHaze = true,
         Faces = {
             { Prop = "SkyboxRt", Url = "https://od.lk/d/NjNfOTg0NzkyOTFf/RightRias.png", File = "RightRias.png" },
@@ -158,7 +182,7 @@ BuiltInSkyboxes = {
         },
     },
     ["Yotsuba Nakano"] = {
-        Folder = "GoonWares/Skyboxes/Yotsuba Nakano",
+        Folder = "GoonWares/Skyboxes/YotsubaNakano",
         ResetHaze = true,
         Faces = {
             { Prop = "SkyboxRt", Url = "https://od.lk/d/NjNfOTg0NzkzMzdf/YotsubaRt.png", File = "YotsubaRt.png" },
@@ -193,7 +217,7 @@ BuiltInSkyboxes = {
         },
     },
     ["Alya 2"] = {
-        Folder = "GoonWares/Skyboxes/Alya 2",
+        Folder = "GoonWares/Skyboxes/Alya2",
         ResetHaze = true,
         Faces = {
             { Prop = "SkyboxRt", Url = "https://od.lk/d/NjNfOTg0NzkzMjRf/AlyaRt.png", File = "AlyaRt.png" },
@@ -232,75 +256,70 @@ BuiltInSkyboxes = {
     },
 }
 
-function ApplyBuiltInSkybox(data)
-    for _, v in pairs(Lighting:GetChildren()) do
-        if v:IsA("Sky") then v:Destroy() end
+function ApplyBuiltInSkybox(Data)
+    for _, V in pairs(Lighting:GetChildren()) do
+        if V:IsA("Sky") then V:Destroy() end
     end
-
-    if data.ResetHaze then
-        for _, v in pairs(Lighting:GetChildren()) do
-            if v:IsA("Atmosphere") then v.Haze = 0 end
+    if Data.ResetHaze then
+        for _, V in pairs(Lighting:GetChildren()) do
+            if V:IsA("Atmosphere") then V.Haze = 0 end
         end
     end
-
     local SkyInstance = Instance.new("Sky")
     SkyInstance.Name = "Sky"
     SkyInstance.CelestialBodiesShown = false
-    SkyInstance.StarCount = data.StarCount or 0
-    if data.SunAngularSize then SkyInstance.SunAngularSize = data.SunAngularSize end
-    if data.MoonAngularSize then SkyInstance.MoonAngularSize = data.MoonAngularSize end
-
-    if data.RbxAssetIds then
-        for prop, id in pairs(data.RbxAssetIds) do
-            SkyInstance[prop] = id
+    SkyInstance.StarCount = Data.StarCount or 0
+    if Data.SunAngularSize then SkyInstance.SunAngularSize = Data.SunAngularSize end
+    if Data.MoonAngularSize then SkyInstance.MoonAngularSize = Data.MoonAngularSize end
+    if Data.RbxAssetIds then
+        for Prop, Id in pairs(Data.RbxAssetIds) do
+            SkyInstance[Prop] = Id
         end
-    elseif data.Faces then
+    elseif Data.Faces then
         pcall(function() makefolder("GoonWares/Skyboxes") end)
-        pcall(function() makefolder(data.Folder) end)
-        for _, face in ipairs(data.Faces) do
-            local path = data.Folder .. "/" .. face.File
-            if not isfile(path) then
-                writefile(path, game:HttpGet(face.Url, true))
+        pcall(function() makefolder(Data.Folder) end)
+        for _, Face in ipairs(Data.Faces) do
+            local Path = Data.Folder .. "/" .. Face.File
+            if not isfile(Path) then
+                writefile(Path, game:HttpGet(Face.Url, true))
             end
-            SkyInstance[face.Prop] = getcustomasset(path)
+            SkyInstance[Face.Prop] = getcustomasset(Path)
         end
     end
-
     SkyInstance.Parent = Lighting
 end
 
-SecSkyboxChanger = Tabs.Visual:AddSection("Skybox Changer", "solar/sun-bold")
-SecSkyboxChanger:AddSpace({ Height = 20 })
-SecSkyboxChanger:AddDivider()
-
 BuiltInSkyboxNames = {}
-for skyboxName in pairs(BuiltInSkyboxes) do
-    table.insert(BuiltInSkyboxNames, skyboxName)
+for SkyboxName in pairs(BuiltInSkyboxes) do
+    table.insert(BuiltInSkyboxNames, SkyboxName)
 end
 table.sort(BuiltInSkyboxNames)
-
 SelectedBuiltInSkybox = BuiltInSkyboxNames[1]
+
+SecSkyboxChanger = Tabs.Visual:AddSection("Skybox Changer", "solar/sun-bold")
+SecSkyboxChanger:AddSpace({ Height = 15 })
+SecSkyboxChanger:AddDivider()
+
 SecSkyboxChanger:AddDropdown("BuiltInSkyboxDropdown", {
+    ThemedDropdown = true,
     DropdownOutsideWindow = true,
     Search = true,
     Title = "Built-in Skybox",
     Values = BuiltInSkyboxNames,
     Default = SelectedBuiltInSkybox,
-    Callback = function(value)
-        SelectedBuiltInSkybox = value
-    end
+    Callback = function(Value) SelectedBuiltInSkybox = Value end
 })
 
 SecSkyboxChanger:AddButton({
     Title = "Apply Skybox",
     Callback = function()
-        local data = BuiltInSkyboxes[SelectedBuiltInSkybox]
-        if data then
-            local ok = pcall(ApplyBuiltInSkybox, data)
-            if ok then
-                Fluent:Notify({ Title = "Skybox", Content = SelectedBuiltInSkybox .. " applied.", Duration = 3 })
+        local Data = BuiltInSkyboxes[SelectedBuiltInSkybox]
+        if Data then
+            local Ok = pcall(ApplyBuiltInSkybox, Data)
+            if Ok then
+                Notify("Skybox", SelectedBuiltInSkybox .. " applied.", "Success", nil, 3)
             else
-                Fluent:Notify({ Title = "Skybox", Content = "Failed to apply skybox.", Duration = 3 })
+                Notify("Skybox", "Failed to apply skybox.", "Error", nil, 3)
             end
         end
     end
@@ -311,30 +330,26 @@ SkyboxForceConnection = nil
 SkyboxApplyingNow = false
 
 function ApplySelectedSkyboxSafely()
-    local data = BuiltInSkyboxes[SelectedBuiltInSkybox]
-    if not data then return end
-
+    local Data = BuiltInSkyboxes[SelectedBuiltInSkybox]
+    if not Data then return end
     SkyboxApplyingNow = true
-    pcall(ApplyBuiltInSkybox, data)
+    pcall(ApplyBuiltInSkybox, Data)
     task.wait(0.2)
     SkyboxApplyingNow = false
 end
 
-SecSkyboxChanger:AddToggle("SkyboxForceToggle", {Title = "Force Skybox Every Round", Default = false}):OnChanged(function(State)
+SecSkyboxChanger:AddToggle("SkyboxForceToggle", { Title = "Lock Skybox", Default = false }):OnChanged(function(State)
     SkyboxForceEnabled = State
-
     if SkyboxForceConnection then
         SkyboxForceConnection:Disconnect()
         SkyboxForceConnection = nil
     end
-
     if State then
         ApplySelectedSkyboxSafely()
-
-        SkyboxForceConnection = Lighting.ChildAdded:Connect(function(child)
+        SkyboxForceConnection = Lighting.ChildAdded:Connect(function(Child)
             if not SkyboxForceEnabled then return end
             if SkyboxApplyingNow then return end
-            if child:IsA("Sky") then
+            if Child:IsA("Sky") then
                 task.wait(0.1)
                 ApplySelectedSkyboxSafely()
             end
@@ -344,75 +359,63 @@ end)
 
 SecSkyboxChanger:AddParagraph({
     Title = "Built-in Skybox Info",
-    Content = "Your executors must have a write file/read file system, and for some skyboxes you will have to wait about 20 seconds to fully load the skybox. Enable 'Force Skybox Every Round' to keep your chosen skybox applied permanently across map/round changes; disable it to let the game's own skybox show normally."
+    Content = "Apply custom skyboxes. Some may take a moment to load. Use Lock/force mode to keep it Forever."
 })
 
-SecSkyboxChanger:AddSpace({ Height = 20 })
-SecSkyboxChanger:AddDivider()
-SecSkyboxChanger:AddSpace({ Height = 20 })
+SecSkyboxChanger:AddSpace({ Height = 15 })
 
 SecCustomSkybox = Tabs.Visual:AddSection("Custom Skybox", "solar/gallery-bold")
-SecCustomSkybox:AddSpace({ Height = 20 })
+SecCustomSkybox:AddSpace({ Height = 15 })
 SecCustomSkybox:AddDivider()
 
 CustomSkyboxInputs = { Lf = "", Rt = "", Up = "", Dn = "", Ft = "", Bk = "" }
 
-function ResolveSkyboxInput(value, faceName)
-    value = tostring(value or ""):gsub("^%s*(.-)%s*$", "%1")
-    if value == "" then return nil end
-    if value:match("^rbxassetid://") then
-        return value
-    elseif value:match("^%d+$") then
-        return "rbxassetid://" .. value
-    elseif value:match("^https?://") then
-        local ok = pcall(function() makefolder("GoonWares/Skyboxes/Custom") end)
-        local path = "GoonWares/Skyboxes/Custom/" .. faceName .. ".png"
-        local downloadOk = pcall(function()
-            writefile(path, game:HttpGet(value, true))
-        end)
-        if downloadOk then
-            return getcustomasset(path)
-        end
+function ResolveSkyboxInput(Value, FaceName)
+    Value = tostring(Value or ""):gsub("^%s*(.-)%s*$", "%1")
+    if Value == "" then return nil end
+    if Value:match("^rbxassetid://") then return Value
+    elseif Value:match("^%d+$") then return "rbxassetid://" .. Value
+    elseif Value:match("^https?://") then
+        pcall(function() makefolder("GoonWares/Skyboxes/Custom") end)
+        local Path = "GoonWares/Skyboxes/Custom/" .. FaceName .. ".png"
+        local Ok = pcall(function() writefile(Path, game:HttpGet(Value, true)) end)
+        if Ok then return getcustomasset(Path) end
     end
     return nil
 end
 
 function ApplyCustomSkybox()
-    local propMap = { Lf = "SkyboxLf", Rt = "SkyboxRt", Up = "SkyboxUp", Dn = "SkyboxDn", Ft = "SkyboxFt", Bk = "SkyboxBk" }
-
-    for _, v in pairs(Lighting:GetChildren()) do
-        if v:IsA("Sky") then v:Destroy() end
+    local PropMap = { Lf = "SkyboxLf", Rt = "SkyboxRt", Up = "SkyboxUp", Dn = "SkyboxDn", Ft = "SkyboxFt", Bk = "SkyboxBk" }
+    for _, V in pairs(Lighting:GetChildren()) do
+        if V:IsA("Sky") then V:Destroy() end
     end
-
     local SkyInstance = Instance.new("Sky")
     SkyInstance.Name = "Sky"
     SkyInstance.CelestialBodiesShown = false
     SkyInstance.StarCount = 0
-
-    local appliedAny = false
-    for face, prop in pairs(propMap) do
-        local resolved = ResolveSkyboxInput(CustomSkyboxInputs[face], face)
-        if resolved then
-            SkyInstance[prop] = resolved
-            appliedAny = true
+    local AppliedAny = false
+    for Face, Prop in pairs(PropMap) do
+        local Resolved = ResolveSkyboxInput(CustomSkyboxInputs[Face], Face)
+        if Resolved then
+            SkyInstance[Prop] = Resolved
+            AppliedAny = true
         end
     end
-
-    if appliedAny then
+    if AppliedAny then
         SkyInstance.Parent = Lighting
-        Fluent:Notify({ Title = "Skybox", Content = "Custom skybox applied.", Duration = 3 })
+        Notify("Skybox", "Custom skybox applied.", "Success", nil, 3)
     else
         SkyInstance:Destroy()
-        Fluent:Notify({ Title = "Skybox", Content = "No valid inputs provided.", Duration = 3 })
+        Notify("Skybox", "No valid inputs provided.", "Error", nil, 3)
     end
 end
 
-SecCustomSkybox:AddInput("CustomSkyboxLf", { Title = "Left (Lf)", Placeholder = "rbxassetid or URL", Callback = function(v) CustomSkyboxInputs.Lf = v end })
-SecCustomSkybox:AddInput("CustomSkyboxRt", { Title = "Right (Rt)", Placeholder = "rbxassetid or URL", Callback = function(v) CustomSkyboxInputs.Rt = v end })
-SecCustomSkybox:AddInput("CustomSkyboxUp", { Title = "Up", Placeholder = "rbxassetid or URL", Callback = function(v) CustomSkyboxInputs.Up = v end })
-SecCustomSkybox:AddInput("CustomSkyboxDn", { Title = "Down (Dn)", Placeholder = "rbxassetid or URL", Callback = function(v) CustomSkyboxInputs.Dn = v end })
-SecCustomSkybox:AddInput("CustomSkyboxFt", { Title = "Front (Ft)", Placeholder = "rbxassetid or URL", Callback = function(v) CustomSkyboxInputs.Ft = v end })
-SecCustomSkybox:AddInput("CustomSkyboxBk", { Title = "Back (Bk)", Placeholder = "rbxassetid or URL", Callback = function(v) CustomSkyboxInputs.Bk = v end })
+SecCustomSkybox:AddInput("CustomSkyboxLf", { Title = "Left (Lf)", Placeholder = "rbxassetid or URL", Callback = function(V) CustomSkyboxInputs.Lf = V end })
+SecCustomSkybox:AddInput("CustomSkyboxRt", { Title = "Right (Rt)", Placeholder = "rbxassetid or URL", Callback = function(V) CustomSkyboxInputs.Rt = V end })
+SecCustomSkybox:AddInput("CustomSkyboxUp", { Title = "Up", Placeholder = "rbxassetid or URL", Callback = function(V) CustomSkyboxInputs.Up = V end })
+SecCustomSkybox:AddInput("CustomSkyboxDn", { Title = "Down (Dn)", Placeholder = "rbxassetid or URL", Callback = function(V) CustomSkyboxInputs.Dn = V end })
+SecCustomSkybox:AddInput("CustomSkyboxFt", { Title = "Front (Ft)", Placeholder = "rbxassetid or URL", Callback = function(V) CustomSkyboxInputs.Ft = V end })
+SecCustomSkybox:AddInput("CustomSkyboxBk", { Title = "Back (Bk)", Placeholder = "rbxassetid or URL", Callback = function(V) CustomSkyboxInputs.Bk = V end })
 
 SecCustomSkybox:AddButton({
     Title = "Apply Custom Skybox",
@@ -421,5 +424,11 @@ SecCustomSkybox:AddButton({
 
 SecCustomSkybox:AddParagraph({
     Title = "Custom Skybox Info",
-    Content = "You can upload 6 cube skyboxes to Roblox create or create 6 cubemaps as direct download links then enter the url or rbxassetid into the 6 inputs must be in the direction of the cube"
+    Content = "Upload 6 cube skybox faces to Roblox or use direct download links, then enter the URL or rbxassetid into the 6 inputs in the correct cube directions."
 })
+
+SecCustomSkybox:AddSpace({ Height = 15 })
+
+SecCustomSkybox:AddDivider()
+SecCustomSkybox:AddSpace({ Height = 20 })
+SecCustomSkybox:AddDivider()
