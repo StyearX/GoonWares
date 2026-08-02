@@ -38,9 +38,8 @@ freecamGui.Name = "GoonWaresFreecam"
 freecamGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 freecamGui.ResetOnSpawn = false
 freecamGui.Parent = game:GetService("CoreGui")
-freecamGui.Enabled = true
+freecamGui.Enabled = false
 local touchGui = nil
-local floatingButton = nil
 local uiMainFrame = nil
 local FFlagUserExitFreecamBreaksWithShiftlock = false
 local FFlagUserShowGuiHideToggles = false
@@ -1386,6 +1385,31 @@ function DummyUI:createUI()
 	mainCorner.CornerRadius = UDim.new(0, 12)
 	mainCorner.Parent = self.mainFrame
 
+	-- Background gradient (animated like FloatingButton)
+	self.mainBgGradient = Instance.new("UIGradient")
+	self.mainBgGradient.Rotation = 0
+	self.mainBgGradient.Parent = self.mainFrame
+
+	-- Glass layer
+	self.glassLayer = Instance.new("Frame")
+	self.glassLayer.Name = "_FCGlass"
+	self.glassLayer.Size = UDim2.fromScale(1, 1)
+	self.glassLayer.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	self.glassLayer.BackgroundTransparency = 0.93
+	self.glassLayer.BorderSizePixel = 0
+	self.glassLayer.ZIndex = 8
+	self.glassLayer.Parent = self.mainFrame
+	local glassCorner = Instance.new("UICorner")
+	glassCorner.CornerRadius = UDim.new(0, 12)
+	glassCorner.Parent = self.glassLayer
+	local glassGradient = Instance.new("UIGradient")
+	glassGradient.Rotation = 90
+	glassGradient.Color = ColorSequence.new({
+		ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+		ColorSequenceKeypoint.new(1, Color3.fromRGB(180, 180, 180)),
+	})
+	glassGradient.Parent = self.glassLayer
+
 	self.acrylicNoise = Instance.new("ImageLabel")
 	self.acrylicNoise.Name = "AcrylicNoise"
 	self.acrylicNoise.Size = UDim2.fromScale(1, 1)
@@ -1397,6 +1421,9 @@ function DummyUI:createUI()
 	self.acrylicNoise.ZIndex = 9
 	self.acrylicNoise.Visible = false
 	self.acrylicNoise.Parent = self.mainFrame
+	local noiseCorner = Instance.new("UICorner")
+	noiseCorner.CornerRadius = UDim.new(0, 12)
+	noiseCorner.Parent = self.acrylicNoise
 
 	self.mainStroke = Instance.new("UIStroke")
 	self.mainStroke.Thickness = 1.25
@@ -1415,7 +1442,7 @@ function DummyUI:createUI()
 	self.topBar.ZIndex = 12
 	self.topBar.Parent = self.mainFrame
 	self.dragHandle = Instance.new("TextButton")
-	self.dragHandle.Size = UDim2.new(1, -84, 1, 0)
+	self.dragHandle.Size = UDim2.new(1, -46, 1, 0)
 	self.dragHandle.BackgroundTransparency = 1
 	self.dragHandle.Text = ""
 	self.dragHandle.AutoButtonColor = false
@@ -1423,7 +1450,7 @@ function DummyUI:createUI()
 	self.dragHandle.Parent = self.topBar
 
 	local titleLabel = Instance.new("TextLabel")
-	titleLabel.Size = UDim2.new(1, -84, 1, 0)
+	titleLabel.Size = UDim2.new(1, -46, 1, 0)
 	titleLabel.Position = UDim2.new(0, 14, 0, 0)
 	titleLabel.BackgroundTransparency = 1
 	titleLabel.TextColor3 = Color3.fromRGB(240, 240, 240)
@@ -1469,13 +1496,8 @@ function DummyUI:createUI()
 		return btn, iconLabel
 	end
 
-	self.closeButton = createTitleBarButton("rbxassetid://9886659671", -4)
-	self.closeButton.MouseButton1Click:Connect(function()
-		self.mainFrame.Visible = false
-		if floatingButton then floatingButton.Visible = true end
-	end)
-
-	self.minButton, self.minIcon = createTitleBarButton("rbxassetid://9886659276", -40)
+	-- Only minimize button (no close/X button)
+	self.minButton, self.minIcon = createTitleBarButton("rbxassetid://9886659276", -4)
 	self.minButton.MouseButton1Click:Connect(function()
 		self:ToggleMinimize()
 	end)
@@ -1524,44 +1546,85 @@ function DummyUI:ToggleMinimize()
 end
 
 function DummyUI:setupThemeReactivity()
-	local shineTime = 0
-	task.spawn(function()
-		while task.wait(0.03) do
-			if not self.mainFrame or not self.mainFrame.Parent then break end
-			local Fluent = self.Fluent
-			if Fluent then
-				local shine = Fluent:GetShine()
-				local acrylicOn = Fluent.UseAcrylic and Fluent.Acrylic
-				local windowTransparent = Fluent.WindowTransparent
+	local t = 0
+	local conn = nil
+	conn = RunService.RenderStepped:Connect(function(dt)
+		if not self.mainFrame or not self.mainFrame.Parent then
+			conn:Disconnect()
+			conn = nil
+			return
+		end
+		local Fluent = self.Fluent
+		if not Fluent then return end
 
-				self.mainFrame.BackgroundTransparency = acrylicOn and (windowTransparent and 0.55 or 0.35) or (windowTransparent and 0.25 or 0.05)
-				self.acrylicNoise.Visible = acrylicOn == true
+		local shine = Fluent:GetShine()
+		local acrylicOn = Fluent.UseAcrylic and Fluent.Acrylic
+		local windowTransparent = Fluent.WindowTransparent
+		local animated = Fluent.ShineEnabled == true
 
-				if shine and shine.Accent then
-					self.tabScrollingFrame.ScrollBarImageColor3 = shine.Accent
-					if self.activeTabButton then
-						self.activeTabButton.BackgroundColor3 = shine.Accent
-					end
+		-- Background transparency
+		self.mainFrame.BackgroundTransparency = acrylicOn and (windowTransparent and 0.55 or 0.35) or (windowTransparent and 0.25 or 0.05)
+		self.acrylicNoise.Visible = acrylicOn == true
+
+		-- Accent color reactive
+		if shine and shine.Accent then
+			self.tabScrollingFrame.ScrollBarImageColor3 = shine.Accent
+			if self.activeTabButton then
+				self.activeTabButton.BackgroundColor3 = shine.Accent
+			end
+		end
+
+		-- Background gradient from ButtonGradients (like FloatingButton)
+		local Grad = Fluent:GetButtonGradient() or Fluent.ButtonGradients
+		if Grad then
+			self.mainBgGradient.Color = Grad.Background
+		end
+
+		if animated then
+			t += dt
+			-- Animated background gradient rotation
+			self.mainBgGradient.Rotation = (t * 25) % 360
+			self.mainBgGradient.Offset = Vector2.new(math.sin(t * 0.4) * 0.12, 0)
+
+			-- Pulse effect on stroke
+			local pulse = (math.sin(t * math.pi * 0.5) + 1) / 2
+
+			if shine and shine.Enabled and shine.Shine then
+				self.strokeGradient.Rotation = (t * (shine.Shine.RotationSpeed or 25)) % 360
+				self.strokeGradient.Offset = Vector2.new(math.sin(t * 0.6) * 0.18, 0)
+				if shine.Shine.ColorSequence then
+					self.strokeGradient.Color = shine.Shine.ColorSequence
 				end
-
-				if shine and shine.Enabled and shine.Shine then
-					shineTime = shineTime + 0.03 * (shine.Shine.Speed or 0.5)
-					self.strokeGradient.Rotation = (shineTime * (shine.Shine.RotationSpeed or 25)) % 360
-					self.strokeGradient.Offset = Vector2.new(math.sin(shineTime * 0.6) * 0.18, 0)
-					if shine.Shine.ColorSequence then
-						self.strokeGradient.Color = shine.Shine.ColorSequence
-					end
-					if shine.StrokeShine then
-						local pulse = (math.sin(shineTime) + 1) / 2
-						local strokeFrom = shine.StrokeDark or Color3.fromRGB(60, 60, 75)
-						self.mainStroke.Thickness = 1.25 + pulse * 1.25
-						self.mainStroke.Color = strokeFrom:Lerp(shine.Accent, pulse)
-					end
+				if shine.StrokeShine then
+					local strokeFrom = shine.StrokeDark or Color3.fromRGB(60, 60, 75)
+					self.mainStroke.Thickness = 1.25 + pulse * 1.25
+					self.mainStroke.Color = strokeFrom:Lerp(shine.Accent, pulse)
 				else
-					self.mainStroke.Thickness = 1.25
-					if shine and shine.StrokeDark then
-						self.mainStroke.Color = shine.StrokeDark
-					end
+					self.mainStroke.Thickness = 1.25 + pulse * 0.75
+				end
+			else
+				self.mainStroke.Thickness = 1.25 + pulse * 0.75
+				if shine and shine.StrokeDark then
+					self.mainStroke.Color = shine.StrokeDark
+				end
+			end
+		else
+			-- Non-animated: still reactive to theme, no motion
+			self.mainBgGradient.Rotation = 0
+			self.mainBgGradient.Offset = Vector2.new(0, 0)
+			self.mainStroke.Thickness = 1.25
+
+			if shine and shine.Enabled and shine.Shine then
+				self.strokeGradient.Rotation = 0
+				if shine.Shine.ColorSequence then
+					self.strokeGradient.Color = shine.Shine.ColorSequence
+				end
+				if shine.StrokeDark then
+					self.mainStroke.Color = shine.StrokeDark
+				end
+			else
+				if shine and shine.StrokeDark then
+					self.mainStroke.Color = shine.StrokeDark
 				end
 			end
 		end
@@ -1938,53 +2001,8 @@ end
 
 local ui = DummyUI.new("Freecam Control", UDim2.new(0, 300, 0, 380), Fluent)
 uiMainFrame = ui.mainFrame
-floatingButton = Instance.new("TextButton")
-floatingButton.Name = "OpenFCUI"
-floatingButton.Size = UDim2.new(0, 120, 0, 40)
-floatingButton.AnchorPoint = Vector2.new(0.5, 1)
-floatingButton.Position = UDim2.new(0.5, 0, 0.92, 0)
-floatingButton.Text = "Freecam"
-floatingButton.TextColor3 = Color3.fromRGB(240, 240, 240)
-floatingButton.TextSize = 14
-floatingButton.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold)
-floatingButton.BackgroundColor3 = Color3.fromRGB(20, 20, 26)
-floatingButton.BackgroundTransparency = 0.15
-floatingButton.BorderSizePixel = 0
-floatingButton.AutoButtonColor = false
-floatingButton.Parent = freecamGui
-floatingButton.ZIndex = 100
-local floatCorner = Instance.new("UICorner")
-floatCorner.CornerRadius = UDim.new(0, 20)
-floatCorner.Parent = floatingButton
-local floatStroke = Instance.new("UIStroke")
-floatStroke.Thickness = 1.5
-floatStroke.Transparency = 0.2
-floatStroke.Parent = floatingButton
-local floatStrokeGradient = Instance.new("UIGradient")
-floatStrokeGradient.Parent = floatStroke
-floatingButton.Visible = true
-floatingButton.MouseButton1Click:Connect(function()
-	if uiMainFrame then uiMainFrame.Visible = true end
-	floatingButton.Visible = false
-end)
-local floatShineTime = 0
-task.spawn(function()
-	while task.wait(0.03) do
-		if not floatingButton or not floatingButton.Parent then break end
-		local shine = Fluent and Fluent:GetShine()
-		if shine then
-			if shine.StrokeDark then floatStroke.Color = shine.StrokeDark end
-			if shine.Enabled and shine.Shine then
-				floatShineTime = floatShineTime + 0.03 * (shine.Shine.Speed or 0.5)
-				floatStrokeGradient.Rotation = (floatShineTime * (shine.Shine.RotationSpeed or 25)) % 360
-				if shine.Shine.ColorSequence then
-					floatStrokeGradient.Color = shine.Shine.ColorSequence
-				end
-			end
-		end
-	end
-end)
 local homeTab = ui:AddTab("Home")
+-- freecamToggle: driven by FluentPro external toggle. UI visibility controlled externally via SetFreecamGuiVisible.
 local freecamToggle = ui:AddToggle(homeTab, { text = "Freecam Enabled", callback = function(state) if state then StartFreecam() else StopFreecam() end end, default = false })
 ui:AddSlider(homeTab, { text = "Movement Speed", min = 0.25, max = 4, default = 1, callback = function(val) MobileNavSpeed = val end })
 ui:AddSlider(homeTab, { text = "Mouse Sensitivity", min = 0.2, max = 3, default = 1, callback = function(val) MouseSensitivity = val end })
@@ -2301,11 +2319,26 @@ do
 	end
 end
 
+	-- SetFreecamGuiVisible: called by FluentPro toggle to show/hide the entire freecam panel
+	local function SetFreecamGuiVisible(state)
+		if uiMainFrame then
+			uiMainFrame.Visible = state
+			-- If hiding while minimized, reset minimized state for next open
+			if not state and ui.minimized then
+				ui.minimized = false
+				if ui.minIcon then ui.minIcon.Image = "rbxassetid://9886659276" end
+				if ui.mainFrame and ui.expandedSize then
+					ui.mainFrame.Size = ui.expandedSize
+				end
+			end
+		end
+	end
+
 	return {
 		ui = ui,
-		floatingButton = floatingButton,
 		freecamGui = freecamGui,
 		ToggleFreecam = ToggleFreecam,
+		SetFreecamGuiVisible = SetFreecamGuiVisible,
 	}
 end
 
