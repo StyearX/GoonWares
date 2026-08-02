@@ -1390,9 +1390,8 @@ function DummyUI:createUI()
 	mainCorner.CornerRadius = UDim.new(0, 12)
 	mainCorner.Parent = self.mainFrame
 
-	-- Gradient identik FloatingButton Gradient
+	-- Gradient identik FloatingButton Gradient (color diupdate di RenderStepped)
 	self.mainBgGradient = Instance.new("UIGradient")
-	self.mainBgGradient.Color = (self.Fluent:GetButtonGradient() or self.Fluent.ButtonGradients).Background
 	self.mainBgGradient.Rotation = 0
 	self.mainBgGradient.Parent = self.mainFrame
 
@@ -1403,7 +1402,6 @@ function DummyUI:createUI()
 	self.mainStroke.Color = Color3.new(1, 1, 1)
 	self.mainStroke.Parent = self.mainFrame
 	self.strokeGradient = Instance.new("UIGradient")
-	self.strokeGradient.Color = (self.Fluent:GetButtonGradient() or self.Fluent.ButtonGradients).Stroke
 	self.strokeGradient.Rotation = 0
 	self.strokeGradient.Parent = self.mainStroke
 
@@ -1568,11 +1566,6 @@ function DummyUI:ToggleMinimize()
 		self.bodyContainer.Visible = true
 		TweenService:Create(self.mainFrame, tweenInfo, {Size = self.expandedSize}):Play()
 		TweenService:Create(self.contentFrame, tweenInfo, {Size = self.expandedSize}):Play()
-	end
-	else
-		self.minIcon.Image = "rbxassetid://9886659276"
-		TweenService:Create(self.mainFrame, tweenInfo, {Size = self.expandedSize}):Play()
-		TweenService:Create(self.bodyContainer, tweenInfo, {BackgroundTransparency = 0}):Play()
 	end
 end
 
