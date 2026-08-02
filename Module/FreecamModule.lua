@@ -51,9 +51,9 @@ local FFlagUserFreecamSmoothnessControl = true
 local FFlagUserFreecamGuiDestabilization = false
 local FFlagUserFreecamDepthOfFieldEffect = true
 local FFlagUserFreecamCustomGui = true
-local FREECAM_ENABLED_ATTRIBUTE_NAME = "FreecamEnabled"
-local TOGGLE_INPUT_PRIORITY = Enum.ContextActionPriority.Low.Value
-local INPUT_PRIORITY = Enum.ContextActionPriority.High.Value
+local FreecamEnabledAttributeName = "FreecamEnabled"
+local ToggleInputPriority = Enum.ContextActionPriority.Low.Value
+local InputPriority = Enum.ContextActionPriority.High.Value
 local NavGain = Vector3.new(1, 1, 1)*64
 local PanGain = Vector2.new(0.75, 1)*8
 local FovGain = 300
@@ -136,7 +136,7 @@ local RollSpring = Spring.new(RollStiffness, 0)
 local TiltLeftActiveKB = false
 local TiltRightActiveKB = false
 function CreateFlyButtons(parent)
-	local PADDING = 9
+	local padding = 9
 	local buttonFrame = Instance.new("Frame")
 	buttonFrame.Name = "FreeCamFlybtn"
 	buttonFrame.BackgroundTransparency = 1
@@ -188,14 +188,14 @@ function CreateFlyButtons(parent)
 		local screenSize = parent.AbsoluteSize
 		local isSmallScreen = math.min(screenSize.X, screenSize.Y) <= 500
 		local buttonSize = isSmallScreen and 70 or 90
-		local totalWidth = (buttonSize * 2) + (PADDING * 3)
-		local totalHeight = buttonSize + (PADDING * 2)
+		local totalWidth = (buttonSize * 2) + (padding * 3)
+		local totalHeight = buttonSize + (padding * 2)
 		buttonFrame.Size = UDim2.new(0, totalWidth, 0, totalHeight)
-		buttonFrame.Position = UDim2.new(1, -(totalWidth + PADDING), 1, -(totalHeight + PADDING))
+		buttonFrame.Position = UDim2.new(1, -(totalWidth + padding), 1, -(totalHeight + padding))
 		flyDownBtn.Size = UDim2.new(0, buttonSize, 0, buttonSize)
-		flyDownBtn.Position = UDim2.new(0, PADDING, 0, PADDING)
+		flyDownBtn.Position = UDim2.new(0, padding, 0, padding)
 		flyUpBtn.Size = UDim2.new(0, buttonSize, 0, buttonSize)
-		flyUpBtn.Position = UDim2.new(0, PADDING + buttonSize + PADDING, 0, PADDING)
+		flyUpBtn.Position = UDim2.new(0, padding + buttonSize + padding, 0, padding)
 	end
 	parent:GetPropertyChangedSignal("AbsoluteSize"):Connect(updateButtonSize)
 	updateButtonSize()
@@ -208,7 +208,7 @@ function CreateFlyButtons(parent)
 	return buttonFrame, flyDownBtn, flyUpBtn
 end
 function CreateTiltButtons(parent)
-	local PADDING = 9
+	local padding = 9
 	local buttonFrame = Instance.new("Frame")
 	buttonFrame.Name = "TiltButtons"
 	buttonFrame.BackgroundTransparency = 1
@@ -254,13 +254,13 @@ function CreateTiltButtons(parent)
 		local screenSize = parent.AbsoluteSize
 		local isSmallScreen = math.min(screenSize.X, screenSize.Y) <= 500
 		local buttonSize = isSmallScreen and 60 or 75
-		local totalWidth = (buttonSize * 2) + (PADDING * 3)
-		buttonFrame.Size = UDim2.new(0, totalWidth, 0, buttonSize + (PADDING * 2))
-		buttonFrame.Position = UDim2.new(0, PADDING, 1, -(buttonSize + (PADDING * 2)))
+		local totalWidth = (buttonSize * 2) + (padding * 3)
+		buttonFrame.Size = UDim2.new(0, totalWidth, 0, buttonSize + (padding * 2))
+		buttonFrame.Position = UDim2.new(0, padding, 1, -(buttonSize + (padding * 2)))
 		tiltLeftBtn.Size = UDim2.new(0, buttonSize, 0, buttonSize)
-		tiltLeftBtn.Position = UDim2.new(0, PADDING, 0, PADDING)
+		tiltLeftBtn.Position = UDim2.new(0, padding, 0, padding)
 		tiltRightBtn.Size = UDim2.new(0, buttonSize, 0, buttonSize)
-		tiltRightBtn.Position = UDim2.new(0, PADDING + buttonSize + PADDING, 0, PADDING)
+		tiltRightBtn.Position = UDim2.new(0, padding + buttonSize + padding, 0, padding)
 	end
 	parent:GetPropertyChangedSignal("AbsoluteSize"):Connect(updateButtonSize)
 	updateButtonSize()
@@ -547,13 +547,13 @@ local Input = {}
 do
 	local thumbstickCurve
 	do
-		local K_CURVATURE = 2.0
-		local K_DEADZONE = 0.15
+		local kCurvature = 2.0
+		local kDeadzone = 0.15
 		function fCurve(x)
-			return (exp(K_CURVATURE*x) - 1)/(exp(K_CURVATURE) - 1)
+			return (exp(kCurvature*x) - 1)/(exp(kCurvature) - 1)
 		end
 		function fDeadzone(x)
-			return fCurve((x - K_DEADZONE)/(1 - K_DEADZONE))
+			return fCurve((x - kDeadzone)/(1 - kDeadzone))
 		end
 		function thumbstickCurve(x)
 			return sign(x)*clamp(fDeadzone(abs(x)), 0, 1)
@@ -572,14 +572,14 @@ do
 		Minus = 0, Equals = 0, Slash = 0, R = 0, T = 0, G = 0, X = 0, L = 0
 	}
 	local mouse = { Delta = Vector2.new(), MouseWheel = 0 }
-	local DEFAULT_FPS = 60
+	local defaultFps = 60
 	local NavGamepadSpeed = Vector3.new(1, 1, 1)
 	local NavKeyboardSpeed = Vector3.new(1, 1, 1)
 	local PanMouseSpeed = Vector2.new(1, 1)*(pi/64)
-	local PanMouseSpeedDt = PanMouseSpeed/DEFAULT_FPS
+	local PanMouseSpeedDt = PanMouseSpeed/defaultFps
 	local PanGamepadSpeed = Vector2.new(1, 1)*(pi/8)
 	local FovWheelSpeed = 1.0
-	local FovWheelSpeedDt = FovWheelSpeed/DEFAULT_FPS
+	local FovWheelSpeedDt = FovWheelSpeed/defaultFps
 	local FovGamepadSpeed = 0.25
 	local RollGamepadSpeed = 1.0
 	local RollKeyboardSpeed = 1.0
@@ -594,10 +594,10 @@ do
 	local RollMinSpeed = 0.01
 	local RollMaxSpeed = 4.0
 	local DoFConstants = {
-		FarIntensity = { ADJ = 0.1, MIN = 0.0, MAX = 1.0 },
-		NearIntensity = { ADJ = 0.1, MIN = 0.0, MAX = 1.0 },
-		FocusDistance = { ADJ = 20.0, MIN = 0.0, MAX = 200.0 },
-		FocusRadius = { ADJ = 5.0, MIN = 0.0, MAX = 50.0 },
+		FarIntensity = { adj = 0.1, min = 0.0, max = 1.0 },
+		NearIntensity = { adj = 0.1, min = 0.0, max = 1.0 },
+		FocusDistance = { adj = 20.0, min = 0.0, max = 200.0 },
+		FocusRadius = { adj = 5.0, min = 0.0, max = 50.0 },
 	}
 	local navSpeed = 1
 	local rollSpeed = 1
@@ -692,44 +692,44 @@ do
 		local ctrlIsDown = UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) or UserInputService:IsKeyDown(Enum.KeyCode.RightControl)
 		if shiftIsDown then
 			FreecamDepthOfField.FarIntensity = clamp(
-				FreecamDepthOfField.FarIntensity + dt * (keyboard.RightBracket - keyboard.LeftBracket) * DoFConstants.FarIntensity.ADJ,
-				DoFConstants.FarIntensity.MIN, DoFConstants.FarIntensity.MAX
+				FreecamDepthOfField.FarIntensity + dt * (keyboard.RightBracket - keyboard.LeftBracket) * DoFConstants.FarIntensity.adj,
+				DoFConstants.FarIntensity.min, DoFConstants.FarIntensity.max
 			)
 			FreecamDepthOfField.InFocusRadius = clamp(
-				FreecamDepthOfField.InFocusRadius + dt * (keyboard.Equals - keyboard.Minus) * DoFConstants.FocusRadius.ADJ,
-				DoFConstants.FocusRadius.MIN, DoFConstants.FocusRadius.MAX
+				FreecamDepthOfField.InFocusRadius + dt * (keyboard.Equals - keyboard.Minus) * DoFConstants.FocusRadius.adj,
+				DoFConstants.FocusRadius.min, DoFConstants.FocusRadius.max
 			)
 		elseif ctrlIsDown then
 			FreecamDepthOfField.NearIntensity = clamp(
-				FreecamDepthOfField.NearIntensity + dt * (keyboard.RightBracket - keyboard.LeftBracket) * DoFConstants.NearIntensity.ADJ,
-				DoFConstants.NearIntensity.MIN, DoFConstants.NearIntensity.MAX
+				FreecamDepthOfField.NearIntensity + dt * (keyboard.RightBracket - keyboard.LeftBracket) * DoFConstants.NearIntensity.adj,
+				DoFConstants.NearIntensity.min, DoFConstants.NearIntensity.max
 			)
 		else
 			FreecamDepthOfField.FocusDistance = clamp(
-				FreecamDepthOfField.FocusDistance + dt * (keyboard.Equals - keyboard.Minus) * DoFConstants.FocusDistance.ADJ,
-				DoFConstants.FocusDistance.MIN, DoFConstants.FocusDistance.MAX
+				FreecamDepthOfField.FocusDistance + dt * (keyboard.Equals - keyboard.Minus) * DoFConstants.FocusDistance.adj,
+				DoFConstants.FocusDistance.min, DoFConstants.FocusDistance.max
 			)
 		end
 	end
 	do
-		local FREECAM_TILT_RESET_GP = {
+		local FreecamTiltResetGp = {
 			[Enum.KeyCode.ButtonL1] = true,
 			[Enum.KeyCode.ButtonR1] = true,
 		}
-		local FREECAM_TILT_RESET_KB = {
+		local FreecamTiltResetKb = {
 			[Enum.KeyCode.Z] = true,
 			[Enum.KeyCode.C] = true,
 		}
-		local FREECAM_DOF_TOGGLE = {
+		local FreecamDofToggle = {
 			[Enum.KeyCode.BackSlash] = true,
 		}
-		local FREECAM_CUSTOM_GUI_TOGGLE = {
+		local FreecamCustomGuiToggle = {
 			[Enum.KeyCode.G] = true,
 		}
-		local FREECAM_PLAYER_GUI_TOGGLE = {
+		local FreecamPlayerGuiToggle = {
 			[Enum.KeyCode.X] = true,
 		}
-		local FREECAM_LEADERBOARD_TOGGLE = {
+		local FreecamLeaderboardToggle = {
 			[Enum.KeyCode.L] = true,
 		}
 		function resetKeys(keys, table)
@@ -748,8 +748,8 @@ do
 					CameraRot = Vector3.new(CameraRot.x, CameraRot.y, 0)
 					RollSpring:Reset(0)
 					if FFlagUserFreecamDepthOfFieldEffect then
-						resetKeys(FREECAM_TILT_RESET_GP, gamepad)
-						resetKeys(FREECAM_TILT_RESET_KB, keyboard)
+						resetKeys(FreecamTiltResetGp, gamepad)
+						resetKeys(FreecamTiltResetKb, keyboard)
 					else
 						gamepad.ButtonL1 = 0
 						gamepad.ButtonR1 = 0
@@ -778,12 +778,12 @@ do
 				end
 			end
 			if FFlagUserFreecamTiltControl then
-				if FREECAM_TILT_RESET_KB[input.KeyCode] and input.UserInputState == Enum.UserInputState.Begin then
+				if FreecamTiltResetKb[input.KeyCode] and input.UserInputState == Enum.UserInputState.Begin then
 					handleDoubleTapReset(input.KeyCode)
 				end
 			end
 			if FFlagUserFreecamDepthOfFieldEffect then
-				if FREECAM_DOF_TOGGLE[input.KeyCode] and input.UserInputState == Enum.UserInputState.Begin then
+				if FreecamDofToggle[input.KeyCode] and input.UserInputState == Enum.UserInputState.Begin then
 					if not FreecamDepthOfField.Enabled then
 						PostEffects = {}
 						for _, effect in ipairs(FreecamCamera:GetChildren()) do
@@ -827,17 +827,17 @@ do
 						PostEffects = {}
 					end
 					FreecamDepthOfField.Enabled = not FreecamDepthOfField.Enabled
-					resetKeys(FREECAM_DOF_TOGGLE, keyboard)
+					resetKeys(FreecamDofToggle, keyboard)
 				end
 			end
 			if FFlagUserFreecamCustomGui then
-				if FREECAM_CUSTOM_GUI_TOGGLE[input.KeyCode] and input.UserInputState == Enum.UserInputState.Begin then
+				if FreecamCustomGuiToggle[input.KeyCode] and input.UserInputState == Enum.UserInputState.Begin then
 					if freecamGui and freecamGui.Parent then
 						freecamGui.Enabled = not freecamGui.Enabled
 					end
-					resetKeys(FREECAM_CUSTOM_GUI_TOGGLE, keyboard)
+					resetKeys(FreecamCustomGuiToggle, keyboard)
 				end
-				if FREECAM_PLAYER_GUI_TOGGLE[input.KeyCode] and input.UserInputState == Enum.UserInputState.Begin then
+				if FreecamPlayerGuiToggle[input.KeyCode] and input.UserInputState == Enum.UserInputState.Begin then
 					ScreenGuisEnabled = not ScreenGuisEnabled
 					if PlayerState then
 						local screenGuis = PlayerState.getScreenGuis()
@@ -847,12 +847,12 @@ do
 							end
 						end
 					end
-					resetKeys(FREECAM_PLAYER_GUI_TOGGLE, keyboard)
+					resetKeys(FreecamPlayerGuiToggle, keyboard)
 				end
-				if FREECAM_LEADERBOARD_TOGGLE[input.KeyCode] and input.UserInputState == Enum.UserInputState.Begin then
+				if FreecamLeaderboardToggle[input.KeyCode] and input.UserInputState == Enum.UserInputState.Begin then
 					LeaderboardEnabled = not LeaderboardEnabled
 					StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.PlayerList, LeaderboardEnabled)
-					resetKeys(FREECAM_LEADERBOARD_TOGGLE, keyboard)
+					resetKeys(FreecamLeaderboardToggle, keyboard)
 				end
 			end
 			return Enum.ContextActionResult.Sink
@@ -860,7 +860,7 @@ do
 		function GpButton(action, state, input)
 			gamepad[input.KeyCode.Name] = state == Enum.UserInputState.Begin and 1 or 0
 			if FFlagUserFreecamTiltControl then
-				if FREECAM_TILT_RESET_GP[input.KeyCode] and input.UserInputState == Enum.UserInputState.Begin then
+				if FreecamTiltResetGp[input.KeyCode] and input.UserInputState == Enum.UserInputState.Begin then
 					handleDoubleTapReset(input.KeyCode)
 				end
 			end
@@ -890,19 +890,19 @@ do
 		end
 		function Input.StartCapture()
 			if FFlagUserFreecamControlSpeed then
-				ContextActionService:BindActionAtPriority("FreecamKeyboard", Keypress, false, INPUT_PRIORITY,
+				ContextActionService:BindActionAtPriority("FreecamKeyboard", Keypress, false, InputPriority,
 					Enum.KeyCode.W, Enum.KeyCode.U, Enum.KeyCode.A, Enum.KeyCode.H,
 					Enum.KeyCode.S, Enum.KeyCode.J, Enum.KeyCode.D, Enum.KeyCode.K,
 					Enum.KeyCode.E, Enum.KeyCode.I, Enum.KeyCode.Q, Enum.KeyCode.Y
 				)
-				ContextActionService:BindActionAtPriority("FreecamKeyboardControlSpeed", Keypress, false, INPUT_PRIORITY,
+				ContextActionService:BindActionAtPriority("FreecamKeyboardControlSpeed", Keypress, false, InputPriority,
 					Enum.KeyCode.Up, Enum.KeyCode.Down, Enum.KeyCode.Left, Enum.KeyCode.Right
 				)
-				ContextActionService:BindActionAtPriority("FreecamGamepadControlSpeed", GpButton, false, INPUT_PRIORITY,
+				ContextActionService:BindActionAtPriority("FreecamGamepadControlSpeed", GpButton, false, InputPriority,
 					Enum.KeyCode.DPadUp, Enum.KeyCode.DPadDown, Enum.KeyCode.DPadLeft, Enum.KeyCode.DPadRight
 				)
 			else
-				ContextActionService:BindActionAtPriority("FreecamKeyboard", Keypress, false, INPUT_PRIORITY,
+				ContextActionService:BindActionAtPriority("FreecamKeyboard", Keypress, false, InputPriority,
 					Enum.KeyCode.W, Enum.KeyCode.U, Enum.KeyCode.A, Enum.KeyCode.H,
 					Enum.KeyCode.S, Enum.KeyCode.J, Enum.KeyCode.D, Enum.KeyCode.K,
 					Enum.KeyCode.E, Enum.KeyCode.I, Enum.KeyCode.Q, Enum.KeyCode.Y,
@@ -910,17 +910,17 @@ do
 				)
 			end
 			if FFlagUserFreecamTiltControl then
-				ContextActionService:BindActionAtPriority("FreecamKeyboardTiltControl", Keypress, false, INPUT_PRIORITY,
+				ContextActionService:BindActionAtPriority("FreecamKeyboardTiltControl", Keypress, false, InputPriority,
 					Enum.KeyCode.Z, Enum.KeyCode.C
 				)
-				ContextActionService:BindActionAtPriority("FreecamGamepadTiltControl", GpButton, false, INPUT_PRIORITY,
+				ContextActionService:BindActionAtPriority("FreecamGamepadTiltControl", GpButton, false, InputPriority,
 					Enum.KeyCode.ButtonL1, Enum.KeyCode.ButtonR1
 				)
-				ContextActionService:BindActionAtPriority("FreecamKeyboardTiltControlSpeed", Keypress, false, INPUT_PRIORITY,
+				ContextActionService:BindActionAtPriority("FreecamKeyboardTiltControlSpeed", Keypress, false, InputPriority,
 					Enum.KeyCode.Comma, Enum.KeyCode.Period
 				)
 				if FFlagUserFreecamSmoothnessControl then
-					ContextActionService:BindActionAtPriority("FreecamKeyboardSmoothnessControl", Keypress, false, INPUT_PRIORITY,
+					ContextActionService:BindActionAtPriority("FreecamKeyboardSmoothnessControl", Keypress, false, InputPriority,
 						Enum.KeyCode.LeftBracket, Enum.KeyCode.RightBracket,
 						Enum.KeyCode.Semicolon, Enum.KeyCode.Quote,
 						Enum.KeyCode.V, Enum.KeyCode.B, Enum.KeyCode.N, Enum.KeyCode.M
@@ -928,21 +928,21 @@ do
 				end
 			end
 			if FFlagUserFreecamDepthOfFieldEffect then
-				ContextActionService:BindActionAtPriority("FreecamKeyboardDoFToggle", Keypress, false, INPUT_PRIORITY, Enum.KeyCode.BackSlash)
-				ContextActionService:BindActionAtPriority("FreecamKeyboardDoFControls", Keypress, false, INPUT_PRIORITY,
+				ContextActionService:BindActionAtPriority("FreecamKeyboardDoFToggle", Keypress, false, InputPriority, Enum.KeyCode.BackSlash)
+				ContextActionService:BindActionAtPriority("FreecamKeyboardDoFControls", Keypress, false, InputPriority,
 					Enum.KeyCode.Minus, Enum.KeyCode.Equals
 				)
 			end
 			if FFlagUserFreecamCustomGui then
-				ContextActionService:BindActionAtPriority("FreecamKeyboardCustomGuiToggle", Keypress, false, INPUT_PRIORITY, Enum.KeyCode.G)
-				ContextActionService:BindActionAtPriority("FreecamKeyboardPlayerGuiToggle", Keypress, false, INPUT_PRIORITY, Enum.KeyCode.X)
-				ContextActionService:BindActionAtPriority("FreecamKeyboardLeaderboardToggle", Keypress, false, INPUT_PRIORITY, Enum.KeyCode.L)
+				ContextActionService:BindActionAtPriority("FreecamKeyboardCustomGuiToggle", Keypress, false, InputPriority, Enum.KeyCode.G)
+				ContextActionService:BindActionAtPriority("FreecamKeyboardPlayerGuiToggle", Keypress, false, InputPriority, Enum.KeyCode.X)
+				ContextActionService:BindActionAtPriority("FreecamKeyboardLeaderboardToggle", Keypress, false, InputPriority, Enum.KeyCode.L)
 			end
-			ContextActionService:BindActionAtPriority("FreecamMousePan", MousePan, false, INPUT_PRIORITY, Enum.UserInputType.MouseMovement)
-			ContextActionService:BindActionAtPriority("FreecamMouseWheel", MouseWheel, false, INPUT_PRIORITY, Enum.UserInputType.MouseWheel)
-			ContextActionService:BindActionAtPriority("FreecamGamepadButton", GpButton, false, INPUT_PRIORITY, Enum.KeyCode.ButtonX, Enum.KeyCode.ButtonY)
-			ContextActionService:BindActionAtPriority("FreecamGamepadTrigger", Trigger, false, INPUT_PRIORITY, Enum.KeyCode.ButtonR2, Enum.KeyCode.ButtonL2)
-			ContextActionService:BindActionAtPriority("FreecamGamepadThumbstick", Thumb, false, INPUT_PRIORITY, Enum.KeyCode.Thumbstick1, Enum.KeyCode.Thumbstick2)
+			ContextActionService:BindActionAtPriority("FreecamMousePan", MousePan, false, InputPriority, Enum.UserInputType.MouseMovement)
+			ContextActionService:BindActionAtPriority("FreecamMouseWheel", MouseWheel, false, InputPriority, Enum.UserInputType.MouseWheel)
+			ContextActionService:BindActionAtPriority("FreecamGamepadButton", GpButton, false, InputPriority, Enum.KeyCode.ButtonX, Enum.KeyCode.ButtonY)
+			ContextActionService:BindActionAtPriority("FreecamGamepadTrigger", Trigger, false, InputPriority, Enum.KeyCode.ButtonR2, Enum.KeyCode.ButtonL2)
+			ContextActionService:BindActionAtPriority("FreecamGamepadThumbstick", Thumb, false, InputPriority, Enum.KeyCode.Thumbstick1, Enum.KeyCode.Thumbstick2)
 		end
 		function Input.StopCapture()
 			if not FFlagUserFreecamCustomGui then
@@ -1150,7 +1150,7 @@ function Draggable.new(dragFrame, targetFrame, callbacks)
 	self.dragFrame = dragFrame
 	self.targetFrame = targetFrame
 	self.callbacks = callbacks or {}
-	self.dragData = { dragging = false, dragStart = nil, startPos = nil, dragDistance = 0, isDraggingStarted = false, currentTouch = nil, originalZIndex = targetFrame.ZIndex, DRAG_THRESHOLD = 5 }
+	self.dragData = { dragging = false, dragStart = nil, startPos = nil, dragDistance = 0, isDraggingStarted = false, currentTouch = nil, originalZIndex = targetFrame.ZIndex, dragThreshold = 5 }
 	self.connections = { mouseUp = nil, touchUp = nil, movement = nil, began = nil }
 	self:setup()
 	return self
@@ -1187,7 +1187,7 @@ function Draggable:updatePosition(input)
 end
 function Draggable:onDragEnd()
 	if self.dragData.dragging then
-		local wasDragged = self.dragData.dragDistance > self.dragData.DRAG_THRESHOLD
+		local wasDragged = self.dragData.dragDistance > self.dragData.dragThreshold
 		if not wasDragged and self.callbacks.onClick then self.callbacks.onClick() end
 		if self.callbacks.onDragEnd then self.callbacks.onDragEnd(wasDragged) end
 		self:resetState()
@@ -1204,7 +1204,7 @@ end
 function Draggable:onMovement(input)
 	if not self.dragData.dragging then return end
 	if input.UserInputType == Enum.UserInputType.MouseMovement or input == self.dragData.currentTouch then
-		if not self.dragData.isDraggingStarted and self.dragData.dragDistance > self.dragData.DRAG_THRESHOLD then
+		if not self.dragData.isDraggingStarted and self.dragData.dragDistance > self.dragData.dragThreshold then
 			self.dragData.isDraggingStarted = true
 			if self.callbacks.onDragStart then self.callbacks.onDragStart() end
 		end
@@ -1330,18 +1330,22 @@ function Toggle.new(toggleContainer, toggleThumb, onChange, Fluent)
 	return self
 end
 function Toggle:animateOn()
-	local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+	local tweenInfo = TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 	local shine = self.Fluent and self.Fluent:GetShine()
 	local accent = (shine and shine.Accent) or Color3.fromRGB(100, 200, 255)
-	TweenService:Create(self.toggleContainer, tweenInfo, {BackgroundColor3 = accent}):Play()
+	self.toggleContainer.BackgroundColor3 = accent
 	TweenService:Create(self.toggleThumb, tweenInfo, {Position = UDim2.new(0, self.toggleContainer.AbsoluteSize.X - 22, 0, 2)}):Play()
 end
 function Toggle:animateOff()
-	local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-	TweenService:Create(self.toggleContainer, tweenInfo, {BackgroundColor3 = Color3.fromRGB(60, 60, 70)}):Play()
+	local tweenInfo = TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+	self.toggleContainer.BackgroundColor3 = Color3.fromRGB(60, 60, 70)
 	TweenService:Create(self.toggleThumb, tweenInfo, {Position = UDim2.new(0, 2, 0, 2)}):Play()
 end
-function Toggle:SetState(state) self.state = state; if state then self:animateOn() else self:animateOff() end; if self.onChange then self.onChange(state) end end
+function Toggle:SetState(state)
+	self.state = state
+	if state then self:animateOn() else self:animateOff() end
+	if self.onChange then self.onChange(state) end
+end
 function Toggle:GetState() return self.state end
 function Toggle:Toggle() self:SetState(not self.state) end
 function Toggle:setup()
@@ -1385,17 +1389,15 @@ function DummyUI:createUI()
 	mainCorner.CornerRadius = UDim.new(0, 12)
 	mainCorner.Parent = self.mainFrame
 
-	-- Background gradient (animated like FloatingButton)
 	self.mainBgGradient = Instance.new("UIGradient")
 	self.mainBgGradient.Rotation = 0
 	self.mainBgGradient.Parent = self.mainFrame
 
-	-- Glass layer
 	self.glassLayer = Instance.new("Frame")
 	self.glassLayer.Name = "_FCGlass"
 	self.glassLayer.Size = UDim2.fromScale(1, 1)
 	self.glassLayer.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	self.glassLayer.BackgroundTransparency = 0.93
+	self.glassLayer.BackgroundTransparency = 0.88
 	self.glassLayer.BorderSizePixel = 0
 	self.glassLayer.ZIndex = 8
 	self.glassLayer.Parent = self.mainFrame
@@ -1409,6 +1411,20 @@ function DummyUI:createUI()
 		ColorSequenceKeypoint.new(1, Color3.fromRGB(180, 180, 180)),
 	})
 	glassGradient.Parent = self.glassLayer
+
+	self.noiseLayer = Instance.new("ImageLabel")
+	self.noiseLayer.Name = "_FCNoise"
+	self.noiseLayer.Image = "rbxassetid://9968344227"
+	self.noiseLayer.ScaleType = Enum.ScaleType.Tile
+	self.noiseLayer.TileSize = UDim2.new(0, 128, 0, 128)
+	self.noiseLayer.Size = UDim2.fromScale(1, 1)
+	self.noiseLayer.BackgroundTransparency = 1
+	self.noiseLayer.ImageTransparency = 0.92
+	self.noiseLayer.ZIndex = 9
+	self.noiseLayer.Parent = self.mainFrame
+	local noiseCorner2 = Instance.new("UICorner")
+	noiseCorner2.CornerRadius = UDim.new(0, 12)
+	noiseCorner2.Parent = self.noiseLayer
 
 	self.acrylicNoise = Instance.new("ImageLabel")
 	self.acrylicNoise.Name = "AcrylicNoise"
@@ -1496,7 +1512,6 @@ function DummyUI:createUI()
 		return btn, iconLabel
 	end
 
-	-- Only minimize button (no close/X button)
 	self.minButton, self.minIcon = createTitleBarButton("rbxassetid://9886659276", -4)
 	self.minButton.MouseButton1Click:Connect(function()
 		self:ToggleMinimize()
@@ -1542,12 +1557,15 @@ function DummyUI:ToggleMinimize()
 	else
 		self.minIcon.Image = "rbxassetid://9886659276"
 		TweenService:Create(self.mainFrame, tweenInfo, {Size = self.expandedSize}):Play()
+		TweenService:Create(self.bodyContainer, tweenInfo, {BackgroundTransparency = 0}):Play()
 	end
 end
 
 function DummyUI:setupThemeReactivity()
 	local t = 0
 	local conn = nil
+	local lastAccent = nil
+
 	conn = RunService.RenderStepped:Connect(function(dt)
 		if not self.mainFrame or not self.mainFrame.Parent then
 			conn:Disconnect()
@@ -1562,32 +1580,49 @@ function DummyUI:setupThemeReactivity()
 		local windowTransparent = Fluent.WindowTransparent
 		local animated = Fluent.ShineEnabled == true
 
-		-- Background transparency
 		self.mainFrame.BackgroundTransparency = acrylicOn and (windowTransparent and 0.55 or 0.35) or (windowTransparent and 0.25 or 0.05)
 		self.acrylicNoise.Visible = acrylicOn == true
+		self.noiseLayer.Visible = not (acrylicOn == true)
 
-		-- Accent color reactive
-		if shine and shine.Accent then
-			self.tabScrollingFrame.ScrollBarImageColor3 = shine.Accent
+		local accent = (shine and shine.Accent) or Color3.fromRGB(100, 200, 255)
+
+		if accent ~= lastAccent then
+			lastAccent = accent
+			self.tabScrollingFrame.ScrollBarImageColor3 = accent
 			if self.activeTabButton then
-				self.activeTabButton.BackgroundColor3 = shine.Accent
+				self.activeTabButton.BackgroundColor3 = accent
+			end
+			for name, tab in pairs(self.tabs) do
+				if name == self.currentTab then
+					tab.button.BackgroundColor3 = accent
+				end
+			end
+			for _, comp in ipairs(self.components) do
+				if comp._isToggle and comp.state then
+					comp.toggleContainer.BackgroundColor3 = accent
+				end
+				if comp._isSlider then
+					if comp.fillRef and comp.fillRef.Parent then
+						comp.fillRef.BackgroundColor3 = accent
+					end
+					if comp.valueLabelRef and comp.valueLabelRef.Parent then
+						comp.valueLabelRef.TextColor3 = accent
+					end
+				end
 			end
 		end
 
-		-- Background gradient from ButtonGradients (like FloatingButton)
 		local Grad = Fluent:GetButtonGradient() or Fluent.ButtonGradients
 		if Grad then
 			self.mainBgGradient.Color = Grad.Background
 		end
 
+		t += dt
+		local pulse = (math.sin(t * math.pi * 0.5) + 1) / 2
+
 		if animated then
-			t += dt
-			-- Animated background gradient rotation
 			self.mainBgGradient.Rotation = (t * 25) % 360
 			self.mainBgGradient.Offset = Vector2.new(math.sin(t * 0.4) * 0.12, 0)
-
-			-- Pulse effect on stroke
-			local pulse = (math.sin(t * math.pi * 0.5) + 1) / 2
 
 			if shine and shine.Enabled and shine.Shine then
 				self.strokeGradient.Rotation = (t * (shine.Shine.RotationSpeed or 25)) % 360
@@ -1598,9 +1633,12 @@ function DummyUI:setupThemeReactivity()
 				if shine.StrokeShine then
 					local strokeFrom = shine.StrokeDark or Color3.fromRGB(60, 60, 75)
 					self.mainStroke.Thickness = 1.25 + pulse * 1.25
-					self.mainStroke.Color = strokeFrom:Lerp(shine.Accent, pulse)
+					self.mainStroke.Color = strokeFrom:Lerp(accent, pulse)
 				else
 					self.mainStroke.Thickness = 1.25 + pulse * 0.75
+					if shine.StrokeDark then
+						self.mainStroke.Color = shine.StrokeDark
+					end
 				end
 			else
 				self.mainStroke.Thickness = 1.25 + pulse * 0.75
@@ -1609,10 +1647,9 @@ function DummyUI:setupThemeReactivity()
 				end
 			end
 		else
-			-- Non-animated: still reactive to theme, no motion
 			self.mainBgGradient.Rotation = 0
 			self.mainBgGradient.Offset = Vector2.new(0, 0)
-			self.mainStroke.Thickness = 1.25
+			self.mainStroke.Thickness = 1.25 + pulse * 0.5
 
 			if shine and shine.Enabled and shine.Shine then
 				self.strokeGradient.Rotation = 0
@@ -1689,7 +1726,22 @@ function DummyUI:SwitchTab(tabName)
 		tab.button.BackgroundColor3 = isActive and activeColor or Color3.fromRGB(45, 45, 55)
 		tab.button.TextColor3 = isActive and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(180, 180, 200)
 		tab.content.Visible = isActive
-		if isActive then self.activeTabButton = tab.button end
+		if isActive then
+			self.activeTabButton = tab.button
+		end
+	end
+	for _, comp in ipairs(self.components) do
+		if comp._isSlider then
+			if comp.fillRef and comp.fillRef.Parent then
+				comp.fillRef.BackgroundColor3 = activeColor
+			end
+			if comp.valueLabelRef and comp.valueLabelRef.Parent then
+				comp.valueLabelRef.TextColor3 = activeColor
+			end
+		end
+		if comp._isToggle and comp.state then
+			comp.toggleContainer.BackgroundColor3 = activeColor
+		end
 	end
 end
 
@@ -1743,6 +1795,8 @@ function DummyUI:AddToggle(parent, config)
 	thumbCorner.Parent = toggleThumb
 
 	local toggle = Toggle.new(toggleContainer, toggleThumb, config.callback, self.Fluent)
+	toggle._isToggle = true
+	toggle.toggleContainer = toggleContainer
 	if config.default then toggle:SetState(config.default) end
 	table.insert(self.components, toggle)
 	return toggle
@@ -1837,21 +1891,10 @@ function DummyUI:AddSlider(parent, config)
 		sliderFill.Size = UDim2.new(normalized, 0, 1, 0)
 		if config.callback then config.callback(value) end
 	end)
+	slider._isSlider = true
+	slider.fillRef = sliderFill
+	slider.valueLabelRef = valueLabel
 	table.insert(self.components, slider)
-
-	local Fluent = self.Fluent
-	task.spawn(function()
-		while task.wait(0.2) do
-			if not sliderFill.Parent then break end
-			if Fluent then
-				local shine = Fluent:GetShine()
-				if shine and shine.Accent then
-					sliderFill.BackgroundColor3 = shine.Accent
-					valueLabel.TextColor3 = shine.Accent
-				end
-			end
-		end
-	end)
 	return slider
 end
 
@@ -2002,7 +2045,6 @@ end
 local ui = DummyUI.new("Freecam Control", UDim2.new(0, 300, 0, 380), Fluent)
 uiMainFrame = ui.mainFrame
 local homeTab = ui:AddTab("Home")
--- freecamToggle: driven by FluentPro external toggle. UI visibility controlled externally via SetFreecamGuiVisible.
 local freecamToggle = ui:AddToggle(homeTab, { text = "Freecam Enabled", callback = function(state) if state then StartFreecam() else StopFreecam() end end, default = false })
 ui:AddSlider(homeTab, { text = "Movement Speed", min = 0.25, max = 4, default = 1, callback = function(val) MobileNavSpeed = val end })
 ui:AddSlider(homeTab, { text = "Mouse Sensitivity", min = 0.2, max = 3, default = 1, callback = function(val) MouseSensitivity = val end })
@@ -2043,7 +2085,7 @@ local function rebuildToggleFreecamKeybind()
 					if allDown then ToggleFreecam() end
 				end
 				return Enum.ContextActionResult.Pass
-			end, false, TOGGLE_INPUT_PRIORITY, lastKey)
+			end, false, ToggleInputPriority, lastKey)
 		end
 	end
 end
@@ -2069,7 +2111,7 @@ local function rebuildDoFKeybind()
 					end
 				end
 				return Enum.ContextActionResult.Pass
-			end, false, INPUT_PRIORITY, lastKey)
+			end, false, InputPriority, lastKey)
 		end
 	end
 end
@@ -2095,7 +2137,7 @@ local function rebuildHideGuiKeybind()
 					end
 				end
 				return Enum.ContextActionResult.Pass
-			end, false, INPUT_PRIORITY, lastKey)
+			end, false, InputPriority, lastKey)
 		end
 	end
 end
@@ -2127,7 +2169,7 @@ local function rebuildHidePlayerGuiKeybind()
 					end
 				end
 				return Enum.ContextActionResult.Pass
-			end, false, INPUT_PRIORITY, lastKey)
+			end, false, InputPriority, lastKey)
 		end
 	end
 end
@@ -2154,7 +2196,7 @@ local function rebuildLeaderboardKeybind()
 					end
 				end
 				return Enum.ContextActionResult.Pass
-			end, false, INPUT_PRIORITY, lastKey)
+			end, false, InputPriority, lastKey)
 		end
 	end
 end
@@ -2181,7 +2223,7 @@ local function rebuildTiltResetKeybind()
 					end
 				end
 				return Enum.ContextActionResult.Pass
-			end, false, INPUT_PRIORITY, lastKey)
+			end, false, InputPriority, lastKey)
 		end
 	end
 end
@@ -2232,7 +2274,7 @@ rebuildLeaderboardKeybind()
 rebuildTiltResetKeybind()
 function StartFreecam()
 	if not FFlagUserFreecamGuiDestabilization then
-		if FFlagUserShowGuiHideToggles then script:SetAttribute(FREECAM_ENABLED_ATTRIBUTE_NAME, true) end
+		if FFlagUserShowGuiHideToggles then script:SetAttribute(FreecamEnabledAttributeName, true) end
 	end
 	local cameraCFrame = FreecamCamera.CFrame
 	if FFlagUserFreecamTiltControl then
@@ -2269,7 +2311,7 @@ function DestroyAllUI()
 end
 function StopFreecam()
 	if not FFlagUserFreecamGuiDestabilization then
-		if FFlagUserShowGuiHideToggles then script:SetAttribute(FREECAM_ENABLED_ATTRIBUTE_NAME, false) end
+		if FFlagUserShowGuiHideToggles then script:SetAttribute(FreecamEnabledAttributeName, false) end
 	end
 	if FFlagUserFreecamDepthOfFieldEffect then
 		if FreecamDepthOfField and FreecamDepthOfField.Parent then
@@ -2296,17 +2338,17 @@ do
 	function ToggleFreecam()
 		if enabled then StopFreecam() else StartFreecam() end
 		enabled = not enabled
-		if FFlagUserFreecamGuiDestabilization then script:SetAttribute(FREECAM_ENABLED_ATTRIBUTE_NAME, enabled) end
+		if FFlagUserFreecamGuiDestabilization then script:SetAttribute(FreecamEnabledAttributeName, enabled) end
 		if freecamToggle and freecamToggle.SetState then
 			freecamToggle:SetState(enabled)
 		end
 	end
 	if FFlagUserFreecamGuiDestabilization or FFlagUserShowGuiHideToggles then
-		script:SetAttribute(FREECAM_ENABLED_ATTRIBUTE_NAME, enabled)
-		script:GetAttributeChangedSignal(FREECAM_ENABLED_ATTRIBUTE_NAME):Connect(function()
-			local attributeValue = script:GetAttribute(FREECAM_ENABLED_ATTRIBUTE_NAME)
+		script:SetAttribute(FreecamEnabledAttributeName, enabled)
+		script:GetAttributeChangedSignal(FreecamEnabledAttributeName):Connect(function()
+			local attributeValue = script:GetAttribute(FreecamEnabledAttributeName)
 			if typeof(attributeValue) ~= "boolean" then
-				script:SetAttribute(FREECAM_ENABLED_ATTRIBUTE_NAME, enabled)
+				script:SetAttribute(FreecamEnabledAttributeName, enabled)
 				return
 			end
 			if attributeValue ~= enabled then
@@ -2319,18 +2361,10 @@ do
 	end
 end
 
-	-- SetFreecamGuiVisible: called by FluentPro toggle to show/hide the entire freecam panel
 	local function SetFreecamGuiVisible(state)
 		freecamGui.Enabled = state
-		if uiMainFrame then
-			uiMainFrame.Visible = state
-			if not state and ui.minimized then
-				ui.minimized = false
-				if ui.minIcon then ui.minIcon.Image = "rbxassetid://9886659276" end
-				if ui.mainFrame and ui.expandedSize then
-					ui.mainFrame.Size = ui.expandedSize
-				end
-			end
+		if state and uiMainFrame then
+			uiMainFrame.Visible = true
 		end
 	end
 
