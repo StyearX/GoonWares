@@ -45,6 +45,39 @@ BuiltInSkyboxes = {
 	        { Prop = "SkyboxDn", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Castorice/down.png", File = "down.png" },
        },
     },
+	["IochiMari"] = {
+        Folder = "GoonWares/Skyboxes/IochiMari",
+        Faces = {
+        	{ Prop = "SkyboxBk", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/IochiMari/back.png", File = "back.png" },
+	        { Prop = "SkyboxFt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/IochiMari/front.png", File = "front.png" },
+	        { Prop = "SkyboxLf", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/IochiMari/left.png", File = "left.png" },
+        	{ Prop = "SkyboxRt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/IochiMari/right.png", File = "right.png" },
+	        { Prop = "SkyboxUp", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/IochiMari/top.png", File = "top.png" },
+	        { Prop = "SkyboxDn", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/IochiMari/down.png", File = "down.png" },
+       },
+    },
+    ["Hoshino"] = {
+        Folder = "GoonWares/Skyboxes/Hoshino",
+        Faces = {
+        	{ Prop = "SkyboxBk", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Hoshino/back.png", File = "back.png" },
+	        { Prop = "SkyboxFt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Hoshino/front.png", File = "front.png" },
+	        { Prop = "SkyboxLf", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Hoshino/left.png", File = "left.png" },
+        	{ Prop = "SkyboxRt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Hoshino/right.png", File = "right.png" },
+	        { Prop = "SkyboxUp", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Hoshino/top.png", File = "top.png" },
+	        { Prop = "SkyboxDn", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Hoshino/down.png", File = "down.png" },
+       },
+    },
+    ["Rossweisse"] = {
+        Folder = "GoonWares/Skyboxes/Rossweisse",
+        Faces = {
+        	{ Prop = "SkyboxBk", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Rossweisse/back.png", File = "back.png" },
+	        { Prop = "SkyboxFt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Rossweisse/front.png", File = "front.png" },
+	        { Prop = "SkyboxLf", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Rossweisse/left.png", File = "left.png" },
+        	{ Prop = "SkyboxRt", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Rossweisse/right.png", File = "right.png" },
+	        { Prop = "SkyboxUp", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Rossweisse/top.png", File = "top.png" },
+	        { Prop = "SkyboxDn", Url = "https://raw.githubusercontent.com/StyearX/Custom-skybox/main/Rossweisse/down.png", File = "down.png" },
+       },
+    },
     ["ItsukiNakano"] = {
         Folder = "GoonWares/Skyboxes/ItsukiNakano",
         Faces = {
