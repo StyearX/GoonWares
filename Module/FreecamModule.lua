@@ -1330,22 +1330,18 @@ function Toggle.new(toggleContainer, toggleThumb, onChange, Fluent)
 	return self
 end
 function Toggle:animateOn()
-	local tweenInfo = TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+	local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 	local shine = self.Fluent and self.Fluent:GetShine()
 	local accent = (shine and shine.Accent) or Color3.fromRGB(100, 200, 255)
-	self.toggleContainer.BackgroundColor3 = accent
+	TweenService:Create(self.toggleContainer, tweenInfo, {BackgroundColor3 = accent}):Play()
 	TweenService:Create(self.toggleThumb, tweenInfo, {Position = UDim2.new(0, self.toggleContainer.AbsoluteSize.X - 22, 0, 2)}):Play()
 end
 function Toggle:animateOff()
-	local tweenInfo = TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-	self.toggleContainer.BackgroundColor3 = Color3.fromRGB(60, 60, 70)
+	local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+	TweenService:Create(self.toggleContainer, tweenInfo, {BackgroundColor3 = Color3.fromRGB(60, 60, 70)}):Play()
 	TweenService:Create(self.toggleThumb, tweenInfo, {Position = UDim2.new(0, 2, 0, 2)}):Play()
 end
-function Toggle:SetState(state)
-	self.state = state
-	if state then self:animateOn() else self:animateOff() end
-	if self.onChange then self.onChange(state) end
-end
+function Toggle:SetState(state) self.state = state; if state then self:animateOn() else self:animateOff() end; if self.onChange then self.onChange(state) end end
 function Toggle:GetState() return self.state end
 function Toggle:Toggle() self:SetState(not self.state) end
 function Toggle:setup()
@@ -1397,7 +1393,7 @@ function DummyUI:createUI()
 	self.glassLayer.Name = "_FCGlass"
 	self.glassLayer.Size = UDim2.fromScale(1, 1)
 	self.glassLayer.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	self.glassLayer.BackgroundTransparency = 0.88
+	self.glassLayer.BackgroundTransparency = 0.93
 	self.glassLayer.BorderSizePixel = 0
 	self.glassLayer.ZIndex = 8
 	self.glassLayer.Parent = self.mainFrame
@@ -1411,20 +1407,6 @@ function DummyUI:createUI()
 		ColorSequenceKeypoint.new(1, Color3.fromRGB(180, 180, 180)),
 	})
 	glassGradient.Parent = self.glassLayer
-
-	self.noiseLayer = Instance.new("ImageLabel")
-	self.noiseLayer.Name = "_FCNoise"
-	self.noiseLayer.Image = "rbxassetid://9968344227"
-	self.noiseLayer.ScaleType = Enum.ScaleType.Tile
-	self.noiseLayer.TileSize = UDim2.new(0, 128, 0, 128)
-	self.noiseLayer.Size = UDim2.fromScale(1, 1)
-	self.noiseLayer.BackgroundTransparency = 1
-	self.noiseLayer.ImageTransparency = 0.92
-	self.noiseLayer.ZIndex = 9
-	self.noiseLayer.Parent = self.mainFrame
-	local noiseCorner2 = Instance.new("UICorner")
-	noiseCorner2.CornerRadius = UDim.new(0, 12)
-	noiseCorner2.Parent = self.noiseLayer
 
 	self.acrylicNoise = Instance.new("ImageLabel")
 	self.acrylicNoise.Name = "AcrylicNoise"
@@ -1564,8 +1546,6 @@ end
 function DummyUI:setupThemeReactivity()
 	local t = 0
 	local conn = nil
-	local lastAccent = nil
-
 	conn = RunService.RenderStepped:Connect(function(dt)
 		if not self.mainFrame or not self.mainFrame.Parent then
 			conn:Disconnect()
@@ -1582,33 +1562,11 @@ function DummyUI:setupThemeReactivity()
 
 		self.mainFrame.BackgroundTransparency = acrylicOn and (windowTransparent and 0.55 or 0.35) or (windowTransparent and 0.25 or 0.05)
 		self.acrylicNoise.Visible = acrylicOn == true
-		self.noiseLayer.Visible = not (acrylicOn == true)
 
-		local accent = (shine and shine.Accent) or Color3.fromRGB(100, 200, 255)
-
-		if accent ~= lastAccent then
-			lastAccent = accent
-			self.tabScrollingFrame.ScrollBarImageColor3 = accent
+		if shine and shine.Accent then
+			self.tabScrollingFrame.ScrollBarImageColor3 = shine.Accent
 			if self.activeTabButton then
-				self.activeTabButton.BackgroundColor3 = accent
-			end
-			for name, tab in pairs(self.tabs) do
-				if name == self.currentTab then
-					tab.button.BackgroundColor3 = accent
-				end
-			end
-			for _, comp in ipairs(self.components) do
-				if comp._isToggle and comp.state then
-					comp.toggleContainer.BackgroundColor3 = accent
-				end
-				if comp._isSlider then
-					if comp.fillRef and comp.fillRef.Parent then
-						comp.fillRef.BackgroundColor3 = accent
-					end
-					if comp.valueLabelRef and comp.valueLabelRef.Parent then
-						comp.valueLabelRef.TextColor3 = accent
-					end
-				end
+				self.activeTabButton.BackgroundColor3 = shine.Accent
 			end
 		end
 
@@ -1617,12 +1575,12 @@ function DummyUI:setupThemeReactivity()
 			self.mainBgGradient.Color = Grad.Background
 		end
 
-		t += dt
-		local pulse = (math.sin(t * math.pi * 0.5) + 1) / 2
-
 		if animated then
+			t += dt
 			self.mainBgGradient.Rotation = (t * 25) % 360
 			self.mainBgGradient.Offset = Vector2.new(math.sin(t * 0.4) * 0.12, 0)
+
+			local pulse = (math.sin(t * math.pi * 0.5) + 1) / 2
 
 			if shine and shine.Enabled and shine.Shine then
 				self.strokeGradient.Rotation = (t * (shine.Shine.RotationSpeed or 25)) % 360
@@ -1633,12 +1591,9 @@ function DummyUI:setupThemeReactivity()
 				if shine.StrokeShine then
 					local strokeFrom = shine.StrokeDark or Color3.fromRGB(60, 60, 75)
 					self.mainStroke.Thickness = 1.25 + pulse * 1.25
-					self.mainStroke.Color = strokeFrom:Lerp(accent, pulse)
+					self.mainStroke.Color = strokeFrom:Lerp(shine.Accent, pulse)
 				else
 					self.mainStroke.Thickness = 1.25 + pulse * 0.75
-					if shine.StrokeDark then
-						self.mainStroke.Color = shine.StrokeDark
-					end
 				end
 			else
 				self.mainStroke.Thickness = 1.25 + pulse * 0.75
@@ -1649,7 +1604,7 @@ function DummyUI:setupThemeReactivity()
 		else
 			self.mainBgGradient.Rotation = 0
 			self.mainBgGradient.Offset = Vector2.new(0, 0)
-			self.mainStroke.Thickness = 1.25 + pulse * 0.5
+			self.mainStroke.Thickness = 1.25
 
 			if shine and shine.Enabled and shine.Shine then
 				self.strokeGradient.Rotation = 0
@@ -1726,22 +1681,7 @@ function DummyUI:SwitchTab(tabName)
 		tab.button.BackgroundColor3 = isActive and activeColor or Color3.fromRGB(45, 45, 55)
 		tab.button.TextColor3 = isActive and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(180, 180, 200)
 		tab.content.Visible = isActive
-		if isActive then
-			self.activeTabButton = tab.button
-		end
-	end
-	for _, comp in ipairs(self.components) do
-		if comp._isSlider then
-			if comp.fillRef and comp.fillRef.Parent then
-				comp.fillRef.BackgroundColor3 = activeColor
-			end
-			if comp.valueLabelRef and comp.valueLabelRef.Parent then
-				comp.valueLabelRef.TextColor3 = activeColor
-			end
-		end
-		if comp._isToggle and comp.state then
-			comp.toggleContainer.BackgroundColor3 = activeColor
-		end
+		if isActive then self.activeTabButton = tab.button end
 	end
 end
 
@@ -1795,8 +1735,6 @@ function DummyUI:AddToggle(parent, config)
 	thumbCorner.Parent = toggleThumb
 
 	local toggle = Toggle.new(toggleContainer, toggleThumb, config.callback, self.Fluent)
-	toggle._isToggle = true
-	toggle.toggleContainer = toggleContainer
 	if config.default then toggle:SetState(config.default) end
 	table.insert(self.components, toggle)
 	return toggle
@@ -1891,10 +1829,21 @@ function DummyUI:AddSlider(parent, config)
 		sliderFill.Size = UDim2.new(normalized, 0, 1, 0)
 		if config.callback then config.callback(value) end
 	end)
-	slider._isSlider = true
-	slider.fillRef = sliderFill
-	slider.valueLabelRef = valueLabel
 	table.insert(self.components, slider)
+
+	local Fluent = self.Fluent
+	task.spawn(function()
+		while task.wait(0.2) do
+			if not sliderFill.Parent then break end
+			if Fluent then
+				local shine = Fluent:GetShine()
+				if shine and shine.Accent then
+					sliderFill.BackgroundColor3 = shine.Accent
+					valueLabel.TextColor3 = shine.Accent
+				end
+			end
+		end
+	end)
 	return slider
 end
 
