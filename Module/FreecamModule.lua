@@ -1330,18 +1330,22 @@ function Toggle.new(toggleContainer, toggleThumb, onChange, Fluent)
 	return self
 end
 function Toggle:animateOn()
-	local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+	local tweenInfo = TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 	local shine = self.Fluent and self.Fluent:GetShine()
 	local accent = (shine and shine.Accent) or Color3.fromRGB(100, 200, 255)
-	TweenService:Create(self.toggleContainer, tweenInfo, {BackgroundColor3 = accent}):Play()
+	self.toggleContainer.BackgroundColor3 = accent
 	TweenService:Create(self.toggleThumb, tweenInfo, {Position = UDim2.new(0, self.toggleContainer.AbsoluteSize.X - 22, 0, 2)}):Play()
 end
 function Toggle:animateOff()
-	local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-	TweenService:Create(self.toggleContainer, tweenInfo, {BackgroundColor3 = Color3.fromRGB(60, 60, 70)}):Play()
+	local tweenInfo = TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+	self.toggleContainer.BackgroundColor3 = Color3.fromRGB(60, 60, 70)
 	TweenService:Create(self.toggleThumb, tweenInfo, {Position = UDim2.new(0, 2, 0, 2)}):Play()
 end
-function Toggle:SetState(state) self.state = state; if state then self:animateOn() else self:animateOff() end; if self.onChange then self.onChange(state) end end
+function Toggle:SetState(state)
+	self.state = state
+	if state then self:animateOn() else self:animateOff() end
+	if self.onChange then self.onChange(state) end
+end
 function Toggle:GetState() return self.state end
 function Toggle:Toggle() self:SetState(not self.state) end
 function Toggle:setup()
@@ -1369,33 +1373,63 @@ function DummyUI:createUI()
 	self.minimized = false
 	self.expandedSize = self.size
 
+	-- ── Layer 0: background frame (identik FloatingButton Frame) ──
 	self.mainFrame = Instance.new("Frame")
 	self.mainFrame.Name = "GoonWaresFreecamUI"
 	self.mainFrame.Size = self.size
 	self.mainFrame.Position = self.position
-	self.mainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 26)
-	self.mainFrame.BackgroundTransparency = 0.05
+	self.mainFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	self.mainFrame.BackgroundTransparency = 0.85
 	self.mainFrame.BorderSizePixel = 0
-	self.mainFrame.ClipsDescendants = true
+	self.mainFrame.ZIndex = -10
+	self.mainFrame.ClipsDescendants = false
 	self.mainFrame.Active = true
-	self.mainFrame.ZIndex = 10
 	self.mainFrame.Parent = freecamGui
 	self.mainFrame.Visible = false
 	local mainCorner = Instance.new("UICorner")
 	mainCorner.CornerRadius = UDim.new(0, 12)
 	mainCorner.Parent = self.mainFrame
 
+	-- Gradient identik FloatingButton Gradient
 	self.mainBgGradient = Instance.new("UIGradient")
+	self.mainBgGradient.Color = (self.Fluent:GetButtonGradient() or self.Fluent.ButtonGradients).Background
 	self.mainBgGradient.Rotation = 0
 	self.mainBgGradient.Parent = self.mainFrame
 
+	-- Stroke identik FloatingButton Stroke
+	self.mainStroke = Instance.new("UIStroke")
+	self.mainStroke.Thickness = 1.5
+	self.mainStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+	self.mainStroke.Color = Color3.new(1, 1, 1)
+	self.mainStroke.Parent = self.mainFrame
+	self.strokeGradient = Instance.new("UIGradient")
+	self.strokeGradient.Color = (self.Fluent:GetButtonGradient() or self.Fluent.ButtonGradients).Stroke
+	self.strokeGradient.Rotation = 0
+	self.strokeGradient.Parent = self.mainStroke
+
+	-- Noise identik FloatingButton Noise (ZIndex negatif agar di belakang content)
+	self.noiseLayer = Instance.new("ImageLabel")
+	self.noiseLayer.Name = "_FCNoise"
+	self.noiseLayer.Image = "rbxassetid://9968344227"
+	self.noiseLayer.ScaleType = Enum.ScaleType.Tile
+	self.noiseLayer.TileSize = UDim2.new(0, 128, 0, 128)
+	self.noiseLayer.Size = UDim2.fromScale(1, 1)
+	self.noiseLayer.BackgroundTransparency = 1
+	self.noiseLayer.ImageTransparency = 0.92
+	self.noiseLayer.ZIndex = -8
+	self.noiseLayer.Parent = self.mainFrame
+	local noiseCorner = Instance.new("UICorner")
+	noiseCorner.CornerRadius = UDim.new(0, 12)
+	noiseCorner.Parent = self.noiseLayer
+
+	-- GlassLayer identik FloatingButton GlassLayer
 	self.glassLayer = Instance.new("Frame")
 	self.glassLayer.Name = "_FCGlass"
 	self.glassLayer.Size = UDim2.fromScale(1, 1)
 	self.glassLayer.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	self.glassLayer.BackgroundTransparency = 0.93
+	self.glassLayer.BackgroundTransparency = 0.88
 	self.glassLayer.BorderSizePixel = 0
-	self.glassLayer.ZIndex = 8
+	self.glassLayer.ZIndex = -9
 	self.glassLayer.Parent = self.mainFrame
 	local glassCorner = Instance.new("UICorner")
 	glassCorner.CornerRadius = UDim.new(0, 12)
@@ -1408,29 +1442,21 @@ function DummyUI:createUI()
 	})
 	glassGradient.Parent = self.glassLayer
 
-	self.acrylicNoise = Instance.new("ImageLabel")
-	self.acrylicNoise.Name = "AcrylicNoise"
-	self.acrylicNoise.Size = UDim2.fromScale(1, 1)
-	self.acrylicNoise.BackgroundTransparency = 1
-	self.acrylicNoise.Image = "rbxassetid://9968344227"
-	self.acrylicNoise.ScaleType = Enum.ScaleType.Tile
-	self.acrylicNoise.TileSize = UDim2.new(0, 128, 0, 128)
-	self.acrylicNoise.ImageTransparency = 0.92
-	self.acrylicNoise.ZIndex = 9
-	self.acrylicNoise.Visible = false
-	self.acrylicNoise.Parent = self.mainFrame
-	local noiseCorner = Instance.new("UICorner")
-	noiseCorner.CornerRadius = UDim.new(0, 12)
-	noiseCorner.Parent = self.acrylicNoise
-
-	self.mainStroke = Instance.new("UIStroke")
-	self.mainStroke.Thickness = 1.25
-	self.mainStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-	self.mainStroke.Transparency = 0.2
-	self.mainStroke.Color = Color3.fromRGB(80, 80, 100)
-	self.mainStroke.Parent = self.mainFrame
-	self.strokeGradient = Instance.new("UIGradient")
-	self.strokeGradient.Parent = self.mainStroke
+	-- ── Layer 1: content frame (clips content saja, transparan) ──
+	self.contentFrame = Instance.new("Frame")
+	self.contentFrame.Name = "GoonWaresFreecamContent"
+	self.contentFrame.Size = self.size
+	self.contentFrame.Position = self.position
+	self.contentFrame.BackgroundTransparency = 1
+	self.contentFrame.BorderSizePixel = 0
+	self.contentFrame.ClipsDescendants = true
+	self.contentFrame.Active = true
+	self.contentFrame.ZIndex = 10
+	self.contentFrame.Parent = freecamGui
+	self.contentFrame.Visible = false
+	local contentCorner = Instance.new("UICorner")
+	contentCorner.CornerRadius = UDim.new(0, 12)
+	contentCorner.Parent = self.contentFrame
 
 	self.topBar = Instance.new("Frame")
 	self.topBar.Name = "TopBar"
@@ -1438,7 +1464,7 @@ function DummyUI:createUI()
 	self.topBar.Position = UDim2.new(0, 0, 0, 0)
 	self.topBar.BackgroundTransparency = 1
 	self.topBar.ZIndex = 12
-	self.topBar.Parent = self.mainFrame
+	self.topBar.Parent = self.contentFrame
 	self.dragHandle = Instance.new("TextButton")
 	self.dragHandle.Size = UDim2.new(1, -46, 1, 0)
 	self.dragHandle.BackgroundTransparency = 1
@@ -1506,7 +1532,7 @@ function DummyUI:createUI()
 	self.bodyContainer.BackgroundTransparency = 1
 	self.bodyContainer.ClipsDescendants = true
 	self.bodyContainer.ZIndex = 11
-	self.bodyContainer.Parent = self.mainFrame
+	self.bodyContainer.Parent = self.contentFrame
 
 	self.tabScrollingFrame = Instance.new("ScrollingFrame")
 	self.tabScrollingFrame.Size = UDim2.new(1, -20, 0, 34)
@@ -1534,8 +1560,15 @@ function DummyUI:ToggleMinimize()
 	if self.minimized then
 		self.expandedSize = self.mainFrame.Size
 		self.minIcon.Image = "rbxassetid://9886659001"
+		self.bodyContainer.Visible = false
 		TweenService:Create(self.mainFrame, tweenInfo, {Size = UDim2.new(self.expandedSize.X.Scale, self.expandedSize.X.Offset, 0, 40)}):Play()
-		TweenService:Create(self.bodyContainer, tweenInfo, {BackgroundTransparency = 1}):Play()
+		TweenService:Create(self.contentFrame, tweenInfo, {Size = UDim2.new(self.expandedSize.X.Scale, self.expandedSize.X.Offset, 0, 40)}):Play()
+	else
+		self.minIcon.Image = "rbxassetid://9886659276"
+		self.bodyContainer.Visible = true
+		TweenService:Create(self.mainFrame, tweenInfo, {Size = self.expandedSize}):Play()
+		TweenService:Create(self.contentFrame, tweenInfo, {Size = self.expandedSize}):Play()
+	end
 	else
 		self.minIcon.Image = "rbxassetid://9886659276"
 		TweenService:Create(self.mainFrame, tweenInfo, {Size = self.expandedSize}):Play()
@@ -1546,6 +1579,8 @@ end
 function DummyUI:setupThemeReactivity()
 	local t = 0
 	local conn = nil
+	local lastAccent = nil
+
 	conn = RunService.RenderStepped:Connect(function(dt)
 		if not self.mainFrame or not self.mainFrame.Parent then
 			conn:Disconnect()
@@ -1555,68 +1590,59 @@ function DummyUI:setupThemeReactivity()
 		local Fluent = self.Fluent
 		if not Fluent then return end
 
-		local shine = Fluent:GetShine()
-		local acrylicOn = Fluent.UseAcrylic and Fluent.Acrylic
-		local windowTransparent = Fluent.WindowTransparent
-		local animated = Fluent.ShineEnabled == true
+		-- Sync contentFrame size/position/visible setiap frame
+		self.contentFrame.Size = self.mainFrame.Size
+		self.contentFrame.Position = self.mainFrame.Position
+		self.contentFrame.Visible = self.mainFrame.Visible
 
-		self.mainFrame.BackgroundTransparency = acrylicOn and (windowTransparent and 0.55 or 0.35) or (windowTransparent and 0.25 or 0.05)
-		self.acrylicNoise.Visible = acrylicOn == true
+		-- Transparansi identik FloatingButton StartFrameLoop
+		local Transparent = Fluent.WindowTransparent
+		self.mainFrame.BackgroundTransparency = Transparent and 0.27 or 0
 
-		if shine and shine.Accent then
-			self.tabScrollingFrame.ScrollBarImageColor3 = shine.Accent
-			if self.activeTabButton then
-				self.activeTabButton.BackgroundColor3 = shine.Accent
-			end
-		end
-
+		-- Gradient dari ButtonGradients, identik FloatingButton
+		local Animated = Fluent.ShineEnabled == true
 		local Grad = Fluent:GetButtonGradient() or Fluent.ButtonGradients
-		if Grad then
-			self.mainBgGradient.Color = Grad.Background
-		end
 
-		if animated then
+		if Animated then
 			t += dt
-			self.mainBgGradient.Rotation = (t * 25) % 360
-			self.mainBgGradient.Offset = Vector2.new(math.sin(t * 0.4) * 0.12, 0)
-
-			local pulse = (math.sin(t * math.pi * 0.5) + 1) / 2
-
-			if shine and shine.Enabled and shine.Shine then
-				self.strokeGradient.Rotation = (t * (shine.Shine.RotationSpeed or 25)) % 360
-				self.strokeGradient.Offset = Vector2.new(math.sin(t * 0.6) * 0.18, 0)
-				if shine.Shine.ColorSequence then
-					self.strokeGradient.Color = shine.Shine.ColorSequence
-				end
-				if shine.StrokeShine then
-					local strokeFrom = shine.StrokeDark or Color3.fromRGB(60, 60, 75)
-					self.mainStroke.Thickness = 1.25 + pulse * 1.25
-					self.mainStroke.Color = strokeFrom:Lerp(shine.Accent, pulse)
-				else
-					self.mainStroke.Thickness = 1.25 + pulse * 0.75
-				end
-			else
-				self.mainStroke.Thickness = 1.25 + pulse * 0.75
-				if shine and shine.StrokeDark then
-					self.mainStroke.Color = shine.StrokeDark
-				end
-			end
+			self.mainBgGradient.Rotation = (t * 30) % 360
+			self.strokeGradient.Rotation = (t * 15) % 360
+			self.mainBgGradient.Offset = Vector2.new(math.sin(t * 0.4) * 0.15, self.mainBgGradient.Offset.Y)
+			local Pulse = (math.sin(t * 0.5 * math.pi) + 1) / 2
+			self.mainStroke.Thickness = 1.25 + Pulse * 0.75
 		else
 			self.mainBgGradient.Rotation = 0
+			self.strokeGradient.Rotation = 0
 			self.mainBgGradient.Offset = Vector2.new(0, 0)
-			self.mainStroke.Thickness = 1.25
+			self.mainStroke.Thickness = 1.5
+			self.mainStroke.Color = Color3.new(1, 1, 1)
+		end
 
-			if shine and shine.Enabled and shine.Shine then
-				self.strokeGradient.Rotation = 0
-				if shine.Shine.ColorSequence then
-					self.strokeGradient.Color = shine.Shine.ColorSequence
+		self.mainBgGradient.Color = Grad.Background
+		self.strokeGradient.Color = Grad.Stroke
+
+		-- Accent sync untuk tab, toggle, slider
+		local shine = Fluent:GetShine()
+		local accent = (shine and shine.Accent) or Color3.fromRGB(100, 200, 255)
+		if accent ~= lastAccent then
+			lastAccent = accent
+			self.tabScrollingFrame.ScrollBarImageColor3 = accent
+			for name, tab in pairs(self.tabs) do
+				if name == self.currentTab then
+					tab.button.BackgroundColor3 = accent
 				end
-				if shine.StrokeDark then
-					self.mainStroke.Color = shine.StrokeDark
+			end
+			for _, comp in ipairs(self.components) do
+				if comp._isToggle and comp.state then
+					comp.toggleContainer.BackgroundColor3 = accent
 				end
-			else
-				if shine and shine.StrokeDark then
-					self.mainStroke.Color = shine.StrokeDark
+				if comp._isSlider then
+					if comp.fillRef and comp.fillRef.Parent then
+						comp.fillRef.BackgroundColor3 = accent
+					end
+					if comp.valueLabelRef and comp.valueLabelRef.Parent then
+						comp.valueLabelRef.TextColor3 = accent
+					end
 				end
 			end
 		end
@@ -1735,6 +1761,8 @@ function DummyUI:AddToggle(parent, config)
 	thumbCorner.Parent = toggleThumb
 
 	local toggle = Toggle.new(toggleContainer, toggleThumb, config.callback, self.Fluent)
+	toggle._isToggle = true
+	toggle.toggleContainer = toggleContainer
 	if config.default then toggle:SetState(config.default) end
 	table.insert(self.components, toggle)
 	return toggle
@@ -1829,21 +1857,10 @@ function DummyUI:AddSlider(parent, config)
 		sliderFill.Size = UDim2.new(normalized, 0, 1, 0)
 		if config.callback then config.callback(value) end
 	end)
+	slider._isSlider = true
+	slider.fillRef = sliderFill
+	slider.valueLabelRef = valueLabel
 	table.insert(self.components, slider)
-
-	local Fluent = self.Fluent
-	task.spawn(function()
-		while task.wait(0.2) do
-			if not sliderFill.Parent then break end
-			if Fluent then
-				local shine = Fluent:GetShine()
-				if shine and shine.Accent then
-					sliderFill.BackgroundColor3 = shine.Accent
-					valueLabel.TextColor3 = shine.Accent
-				end
-			end
-		end
-	end)
 	return slider
 end
 
@@ -1993,6 +2010,7 @@ end
 
 local ui = DummyUI.new("Freecam Control", UDim2.new(0, 300, 0, 380), Fluent)
 uiMainFrame = ui.mainFrame
+local uiContentFrame = ui.contentFrame
 local homeTab = ui:AddTab("Home")
 local freecamToggle = ui:AddToggle(homeTab, { text = "Freecam Enabled", callback = function(state) if state then StartFreecam() else StopFreecam() end end, default = false })
 ui:AddSlider(homeTab, { text = "Movement Speed", min = 0.25, max = 4, default = 1, callback = function(val) MobileNavSpeed = val end })
@@ -2314,6 +2332,7 @@ end
 		freecamGui.Enabled = state
 		if state and uiMainFrame then
 			uiMainFrame.Visible = true
+			if uiContentFrame then uiContentFrame.Visible = true end
 		end
 	end
 
