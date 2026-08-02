@@ -1367,6 +1367,9 @@ function DummyUI.new(title, size, Fluent)
 end
 
 function DummyUI:createUI()
+	self.minimized = false
+	self.expandedSize = self.size
+
 	self.mainFrame = Instance.new("Frame")
 	self.mainFrame.Name = "GoonWaresFreecamUI"
 	self.mainFrame.Size = self.size
@@ -1383,20 +1386,6 @@ function DummyUI:createUI()
 	mainCorner.CornerRadius = UDim.new(0, 12)
 	mainCorner.Parent = self.mainFrame
 
-	self.gradientBg = Instance.new("Frame")
-	self.gradientBg.Name = "GradientBg"
-	self.gradientBg.Size = UDim2.fromScale(1, 1)
-	self.gradientBg.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	self.gradientBg.BackgroundTransparency = 1
-	self.gradientBg.BorderSizePixel = 0
-	self.gradientBg.ZIndex = 9
-	self.gradientBg.Parent = self.mainFrame
-	local bgCorner = Instance.new("UICorner")
-	bgCorner.CornerRadius = UDim.new(0, 12)
-	bgCorner.Parent = self.gradientBg
-	self.bgGradient = Instance.new("UIGradient")
-	self.bgGradient.Parent = self.gradientBg
-
 	self.acrylicNoise = Instance.new("ImageLabel")
 	self.acrylicNoise.Name = "AcrylicNoise"
 	self.acrylicNoise.Size = UDim2.fromScale(1, 1)
@@ -1410,9 +1399,10 @@ function DummyUI:createUI()
 	self.acrylicNoise.Parent = self.mainFrame
 
 	self.mainStroke = Instance.new("UIStroke")
-	self.mainStroke.Thickness = 1.5
+	self.mainStroke.Thickness = 1.25
 	self.mainStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 	self.mainStroke.Transparency = 0.2
+	self.mainStroke.Color = Color3.fromRGB(80, 80, 100)
 	self.mainStroke.Parent = self.mainFrame
 	self.strokeGradient = Instance.new("UIGradient")
 	self.strokeGradient.Parent = self.mainStroke
@@ -1425,7 +1415,7 @@ function DummyUI:createUI()
 	self.topBar.ZIndex = 12
 	self.topBar.Parent = self.mainFrame
 	self.dragHandle = Instance.new("TextButton")
-	self.dragHandle.Size = UDim2.new(1, -46, 1, 0)
+	self.dragHandle.Size = UDim2.new(1, -84, 1, 0)
 	self.dragHandle.BackgroundTransparency = 1
 	self.dragHandle.Text = ""
 	self.dragHandle.AutoButtonColor = false
@@ -1433,7 +1423,7 @@ function DummyUI:createUI()
 	self.dragHandle.Parent = self.topBar
 
 	local titleLabel = Instance.new("TextLabel")
-	titleLabel.Size = UDim2.new(1, -20, 1, 0)
+	titleLabel.Size = UDim2.new(1, -84, 1, 0)
 	titleLabel.Position = UDim2.new(0, 14, 0, 0)
 	titleLabel.BackgroundTransparency = 1
 	titleLabel.TextColor3 = Color3.fromRGB(240, 240, 240)
@@ -1446,37 +1436,69 @@ function DummyUI:createUI()
 	titleLabel.Parent = self.topBar
 	self.titleLabel = titleLabel
 
-	self.closeButton = Instance.new("TextButton")
-	self.closeButton.Size = UDim2.new(0, 30, 0, 30)
-	self.closeButton.Position = UDim2.new(1, -38, 0, 5)
-	self.closeButton.BackgroundColor3 = Color3.fromRGB(220, 60, 60)
-	self.closeButton.BackgroundTransparency = 0.75
-	self.closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-	self.closeButton.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold)
-	self.closeButton.TextSize = 15
-	self.closeButton.Text = "X"
-	self.closeButton.AutoButtonColor = false
-	self.closeButton.BorderSizePixel = 0
-	self.closeButton.ZIndex = 13
-	self.closeButton.Parent = self.topBar
-	local closeCorner = Instance.new("UICorner")
-	closeCorner.CornerRadius = UDim.new(0, 15)
-	closeCorner.Parent = self.closeButton
+	local function createTitleBarButton(icon, xOffset)
+		local btn = Instance.new("TextButton")
+		btn.Size = UDim2.new(0, 34, 1, -8)
+		btn.AnchorPoint = Vector2.new(1, 0)
+		btn.Position = UDim2.new(1, xOffset, 0, 4)
+		btn.BackgroundTransparency = 1
+		btn.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
+		btn.Text = ""
+		btn.AutoButtonColor = false
+		btn.ZIndex = 13
+		btn.Parent = self.topBar
+		local corner = Instance.new("UICorner")
+		corner.CornerRadius = UDim.new(0, 7)
+		corner.Parent = btn
+		local iconLabel = Instance.new("ImageLabel")
+		iconLabel.Name = "Icon"
+		iconLabel.Image = icon
+		iconLabel.Size = UDim2.fromOffset(16, 16)
+		iconLabel.Position = UDim2.fromScale(0.5, 0.5)
+		iconLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+		iconLabel.BackgroundTransparency = 1
+		iconLabel.ImageColor3 = Color3.fromRGB(240, 240, 240)
+		iconLabel.ZIndex = 14
+		iconLabel.Parent = btn
+		btn.MouseEnter:Connect(function()
+			TweenService:Create(btn, TweenInfo.new(0.15), {BackgroundTransparency = 0.94}):Play()
+		end)
+		btn.MouseLeave:Connect(function()
+			TweenService:Create(btn, TweenInfo.new(0.15), {BackgroundTransparency = 1}):Play()
+		end)
+		return btn, iconLabel
+	end
+
+	self.closeButton = createTitleBarButton("rbxassetid://9886659671", -4)
 	self.closeButton.MouseButton1Click:Connect(function()
 		self.mainFrame.Visible = false
 		if floatingButton then floatingButton.Visible = true end
 	end)
 
+	self.minButton, self.minIcon = createTitleBarButton("rbxassetid://9886659276", -40)
+	self.minButton.MouseButton1Click:Connect(function()
+		self:ToggleMinimize()
+	end)
+
+	self.bodyContainer = Instance.new("Frame")
+	self.bodyContainer.Name = "Body"
+	self.bodyContainer.Size = UDim2.new(1, 0, 1, -40)
+	self.bodyContainer.Position = UDim2.new(0, 0, 0, 40)
+	self.bodyContainer.BackgroundTransparency = 1
+	self.bodyContainer.ClipsDescendants = true
+	self.bodyContainer.ZIndex = 11
+	self.bodyContainer.Parent = self.mainFrame
+
 	self.tabScrollingFrame = Instance.new("ScrollingFrame")
 	self.tabScrollingFrame.Size = UDim2.new(1, -20, 0, 34)
-	self.tabScrollingFrame.Position = UDim2.new(0, 10, 0, 44)
+	self.tabScrollingFrame.Position = UDim2.new(0, 10, 0, 4)
 	self.tabScrollingFrame.BackgroundTransparency = 1
 	self.tabScrollingFrame.BorderSizePixel = 0
 	self.tabScrollingFrame.ScrollBarThickness = 3
 	self.tabScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
 	self.tabScrollingFrame.ScrollingDirection = Enum.ScrollingDirection.X
 	self.tabScrollingFrame.ZIndex = 12
-	self.tabScrollingFrame.Parent = self.mainFrame
+	self.tabScrollingFrame.Parent = self.bodyContainer
 	self.tabLayout = Instance.new("UIListLayout")
 	self.tabLayout.FillDirection = Enum.FillDirection.Horizontal
 	self.tabLayout.Padding = UDim.new(0, 8)
@@ -1487,21 +1509,34 @@ function DummyUI:createUI()
 	end)
 end
 
+function DummyUI:ToggleMinimize()
+	self.minimized = not self.minimized
+	local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+	if self.minimized then
+		self.expandedSize = self.mainFrame.Size
+		self.minIcon.Image = "rbxassetid://9886659001"
+		TweenService:Create(self.mainFrame, tweenInfo, {Size = UDim2.new(self.expandedSize.X.Scale, self.expandedSize.X.Offset, 0, 40)}):Play()
+		TweenService:Create(self.bodyContainer, tweenInfo, {BackgroundTransparency = 1}):Play()
+	else
+		self.minIcon.Image = "rbxassetid://9886659276"
+		TweenService:Create(self.mainFrame, tweenInfo, {Size = self.expandedSize}):Play()
+	end
+end
+
 function DummyUI:setupThemeReactivity()
+	local shineTime = 0
 	task.spawn(function()
 		while task.wait(0.03) do
 			if not self.mainFrame or not self.mainFrame.Parent then break end
 			local Fluent = self.Fluent
 			if Fluent then
-				local grad = Fluent:GetButtonGradient()
 				local shine = Fluent:GetShine()
 				local acrylicOn = Fluent.UseAcrylic and Fluent.Acrylic
 				local windowTransparent = Fluent.WindowTransparent
 
-				if grad then
-					self.bgGradient.Color = grad.Background
-					self.strokeGradient.Color = grad.Stroke
-				end
+				self.mainFrame.BackgroundTransparency = acrylicOn and (windowTransparent and 0.55 or 0.35) or (windowTransparent and 0.25 or 0.05)
+				self.acrylicNoise.Visible = acrylicOn == true
+
 				if shine and shine.Accent then
 					self.tabScrollingFrame.ScrollBarImageColor3 = shine.Accent
 					if self.activeTabButton then
@@ -1509,13 +1544,24 @@ function DummyUI:setupThemeReactivity()
 					end
 				end
 
-				self.gradientBg.BackgroundTransparency = 0.15
-				self.mainFrame.BackgroundTransparency = acrylicOn and (windowTransparent and 0.55 or 0.35) or (windowTransparent and 0.25 or 0.05)
-				self.acrylicNoise.Visible = acrylicOn == true
-
-				if shine and shine.Enabled then
-					self.strokeGradient.Rotation = (self.strokeGradient.Rotation + 1) % 360
-					self.bgGradient.Rotation = (self.bgGradient.Rotation + 0.3) % 360
+				if shine and shine.Enabled and shine.Shine then
+					shineTime = shineTime + 0.03 * (shine.Shine.Speed or 0.5)
+					self.strokeGradient.Rotation = (shineTime * (shine.Shine.RotationSpeed or 25)) % 360
+					self.strokeGradient.Offset = Vector2.new(math.sin(shineTime * 0.6) * 0.18, 0)
+					if shine.Shine.ColorSequence then
+						self.strokeGradient.Color = shine.Shine.ColorSequence
+					end
+					if shine.StrokeShine then
+						local pulse = (math.sin(shineTime) + 1) / 2
+						local strokeFrom = shine.StrokeDark or Color3.fromRGB(60, 60, 75)
+						self.mainStroke.Thickness = 1.25 + pulse * 1.25
+						self.mainStroke.Color = strokeFrom:Lerp(shine.Accent, pulse)
+					end
+				else
+					self.mainStroke.Thickness = 1.25
+					if shine and shine.StrokeDark then
+						self.mainStroke.Color = shine.StrokeDark
+					end
 				end
 			end
 		end
@@ -1546,15 +1592,15 @@ function DummyUI:AddTab(tabName)
 
 	local tabContent = Instance.new("ScrollingFrame")
 	tabContent.Name = tabName .. "Content"
-	tabContent.Size = UDim2.new(1, -20, 1, -90)
-	tabContent.Position = UDim2.new(0, 10, 0, 84)
+	tabContent.Size = UDim2.new(1, -20, 1, -50)
+	tabContent.Position = UDim2.new(0, 10, 0, 44)
 	tabContent.BackgroundTransparency = 1
 	tabContent.BorderSizePixel = 0
 	tabContent.ScrollBarThickness = 5
 	tabContent.CanvasSize = UDim2.new(0, 0, 0, 0)
 	tabContent.Visible = false
 	tabContent.ZIndex = 11
-	tabContent.Parent = self.mainFrame
+	tabContent.Parent = self.bodyContainer
 	local tabLayout = Instance.new("UIListLayout")
 	tabLayout.Padding = UDim.new(0, 10)
 	tabLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
@@ -1921,14 +1967,20 @@ floatingButton.MouseButton1Click:Connect(function()
 	if uiMainFrame then uiMainFrame.Visible = true end
 	floatingButton.Visible = false
 end)
+local floatShineTime = 0
 task.spawn(function()
 	while task.wait(0.03) do
 		if not floatingButton or not floatingButton.Parent then break end
 		local shine = Fluent and Fluent:GetShine()
-		local grad = Fluent and Fluent:GetButtonGradient()
-		if grad then floatStrokeGradient.Color = grad.Stroke end
-		if shine and shine.Enabled then
-			floatStrokeGradient.Rotation = (floatStrokeGradient.Rotation + 1) % 360
+		if shine then
+			if shine.StrokeDark then floatStroke.Color = shine.StrokeDark end
+			if shine.Enabled and shine.Shine then
+				floatShineTime = floatShineTime + 0.03 * (shine.Shine.Speed or 0.5)
+				floatStrokeGradient.Rotation = (floatShineTime * (shine.Shine.RotationSpeed or 25)) % 360
+				if shine.Shine.ColorSequence then
+					floatStrokeGradient.Color = shine.Shine.ColorSequence
+				end
+			end
 		end
 	end
 end)
