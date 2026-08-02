@@ -38,7 +38,7 @@ freecamGui.Name = "GoonWaresFreecam"
 freecamGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 freecamGui.ResetOnSpawn = false
 freecamGui.Parent = game:GetService("CoreGui")
-freecamGui.Enabled = false
+freecamGui.Enabled = true
 local touchGui = nil
 local uiMainFrame = nil
 local FFlagUserExitFreecamBreaksWithShiftlock = false
@@ -2321,9 +2321,9 @@ end
 
 	-- SetFreecamGuiVisible: called by FluentPro toggle to show/hide the entire freecam panel
 	local function SetFreecamGuiVisible(state)
+		freecamGui.Enabled = state
 		if uiMainFrame then
 			uiMainFrame.Visible = state
-			-- If hiding while minimized, reset minimized state for next open
 			if not state and ui.minimized then
 				ui.minimized = false
 				if ui.minIcon then ui.minIcon.Image = "rbxassetid://9886659276" end
