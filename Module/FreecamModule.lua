@@ -212,7 +212,7 @@ function CreateTiltButtons(parent)
 
 	local function MakeTiltButton(iconId)
 		local outerFrame = Instance.new("Frame")
-		outerFrame.BackgroundColor3 = Color3.fromRGB(128, 128, 128)
+		outerFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 		outerFrame.BackgroundTransparency = 0.5
 		outerFrame.ZIndex = 15
 		outerFrame.Parent = parent
@@ -286,6 +286,7 @@ function CreateTiltButtons(parent)
 
 	tiltLeftHit.InputBegan:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.Touch and input.UserInputState == Enum.UserInputState.Begin then
+			tiltLeftFrame.BackgroundColor3 = Color3.fromRGB(128, 128, 128)
 			tiltLeftFrame.BackgroundTransparency = 0.2
 			tiltLeftIcon.ImageTransparency = 0
 			TiltLeftActive = true
@@ -293,6 +294,7 @@ function CreateTiltButtons(parent)
 	end)
 	tiltLeftHit.InputEnded:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.Touch then
+			tiltLeftFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 			tiltLeftFrame.BackgroundTransparency = 0.5
 			tiltLeftIcon.ImageTransparency = 0.6
 			TiltLeftActive = false
@@ -300,6 +302,7 @@ function CreateTiltButtons(parent)
 	end)
 	tiltRightHit.InputBegan:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.Touch and input.UserInputState == Enum.UserInputState.Begin then
+			tiltRightFrame.BackgroundColor3 = Color3.fromRGB(128, 128, 128)
 			tiltRightFrame.BackgroundTransparency = 0.2
 			tiltRightIcon.ImageTransparency = 0
 			TiltRightActive = true
@@ -307,6 +310,7 @@ function CreateTiltButtons(parent)
 	end)
 	tiltRightHit.InputEnded:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.Touch then
+			tiltRightFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 			tiltRightFrame.BackgroundTransparency = 0.5
 			tiltRightIcon.ImageTransparency = 0.6
 			TiltRightActive = false
@@ -332,8 +336,10 @@ function CreateTiltButtons(parent)
 	GuiService.MenuOpened:Connect(function()
 		TiltLeftActive = false
 		TiltRightActive = false
+		tiltLeftFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 		tiltLeftFrame.BackgroundTransparency = 0.5
 		tiltLeftIcon.ImageTransparency = 0.6
+		tiltRightFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 		tiltRightFrame.BackgroundTransparency = 0.5
 		tiltRightIcon.ImageTransparency = 0.6
 	end)
