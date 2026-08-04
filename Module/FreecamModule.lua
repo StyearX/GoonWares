@@ -209,47 +209,110 @@ function CreateFlyButtons(parent)
 end
 function CreateTiltButtons(parent)
 	local padding = 9
+
+	local function MakeTiltButton(iconId)
+		local outerFrame = Instance.new("Frame")
+		outerFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+		outerFrame.BackgroundTransparency = 0.5
+		outerFrame.ZIndex = 15
+		outerFrame.Parent = parent
+
+		local outerCorner = Instance.new("UICorner")
+		outerCorner.CornerRadius = UDim.new(1, 0)
+		outerCorner.Parent = outerFrame
+
+		local outerStroke = Instance.new("UIStroke")
+		outerStroke.Thickness = 3
+		outerStroke.Transparency = 0.8
+		outerStroke.Color = Color3.fromRGB(255, 255, 255)
+		outerStroke.Parent = outerFrame
+
+		local innerFrame = Instance.new("Frame")
+		innerFrame.Size = UDim2.new(1, 6, 1, 6)
+		innerFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+		innerFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+		innerFrame.BackgroundTransparency = 1
+		innerFrame.ZIndex = 15
+		innerFrame.Parent = outerFrame
+
+		local innerCorner = Instance.new("UICorner")
+		innerCorner.CornerRadius = UDim.new(1, 0)
+		innerCorner.Parent = innerFrame
+
+		local innerStroke = Instance.new("UIStroke")
+		innerStroke.Thickness = 2
+		innerStroke.Transparency = 0.6
+		innerStroke.Color = Color3.fromRGB(0, 0, 0)
+		innerStroke.Parent = innerFrame
+
+		local icon = Instance.new("ImageLabel")
+		icon.Size = UDim2.new(0.55, 0, 0.55, 0)
+		icon.Position = UDim2.new(0.5, 0, 0.5, 0)
+		icon.AnchorPoint = Vector2.new(0.5, 0.5)
+		icon.BackgroundTransparency = 1
+		icon.Image = iconId
+		icon.ImageColor3 = Color3.fromRGB(255, 255, 255)
+		icon.ImageTransparency = 0.3
+		icon.ZIndex = 16
+		icon.Parent = outerFrame
+
+		local hitbox = Instance.new("TextButton")
+		hitbox.Size = UDim2.new(1, 0, 1, 0)
+		hitbox.Position = UDim2.new(0, 0, 0, 0)
+		hitbox.BackgroundTransparency = 1
+		hitbox.Text = ""
+		hitbox.ZIndex = 17
+		hitbox.Parent = outerFrame
+
+		return outerFrame, hitbox, icon
+	end
+
 	local buttonFrame = Instance.new("Frame")
 	buttonFrame.Name = "TiltButtons"
 	buttonFrame.BackgroundTransparency = 1
 	buttonFrame.Parent = parent
 	buttonFrame.ZIndex = 15
-	local tiltLeftBtn = Instance.new("ImageButton")
-	tiltLeftBtn.Name = "TiltLeftBtn"
-	tiltLeftBtn.BackgroundTransparency = 1
-	tiltLeftBtn.Image = "rbxassetid://138041015580154"
-	tiltLeftBtn.Parent = buttonFrame
-	tiltLeftBtn.ZIndex = 15
-	local tiltRightBtn = Instance.new("ImageButton")
-	tiltRightBtn.Name = "TiltRightBtn"
-	tiltRightBtn.BackgroundTransparency = 1
-	tiltRightBtn.Image = "rbxassetid://122289559454004"
-	tiltRightBtn.Parent = buttonFrame
-	tiltRightBtn.ZIndex = 15
-	tiltLeftBtn.InputBegan:Connect(function(input)
+
+	local tiltLeftFrame, tiltLeftHit, tiltLeftIcon = MakeTiltButton("rbxassetid://110116685948665")
+	tiltLeftFrame.Name = "TiltLeftBtn"
+	tiltLeftFrame.Parent = buttonFrame
+
+	local tiltRightFrame, tiltRightHit, tiltRightIcon = MakeTiltButton("rbxassetid://84183336178654")
+	tiltRightFrame.Name = "TiltRightBtn"
+	tiltRightFrame.Parent = buttonFrame
+
+	local tiltLeftBtn = tiltLeftHit
+	local tiltRightBtn = tiltRightHit
+
+	tiltLeftHit.InputBegan:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.Touch and input.UserInputState == Enum.UserInputState.Begin then
-			tiltLeftBtn.ImageTransparency = 0.3
+			tiltLeftFrame.BackgroundTransparency = 0.25
+			tiltLeftIcon.ImageTransparency = 0
 			TiltLeftActive = true
 		end
 	end)
-	tiltLeftBtn.InputEnded:Connect(function(input)
+	tiltLeftHit.InputEnded:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.Touch then
-			tiltLeftBtn.ImageTransparency = 0
+			tiltLeftFrame.BackgroundTransparency = 0.5
+			tiltLeftIcon.ImageTransparency = 0.3
 			TiltLeftActive = false
 		end
 	end)
-	tiltRightBtn.InputBegan:Connect(function(input)
+	tiltRightHit.InputBegan:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.Touch and input.UserInputState == Enum.UserInputState.Begin then
-			tiltRightBtn.ImageTransparency = 0.3
+			tiltRightFrame.BackgroundTransparency = 0.25
+			tiltRightIcon.ImageTransparency = 0
 			TiltRightActive = true
 		end
 	end)
-	tiltRightBtn.InputEnded:Connect(function(input)
+	tiltRightHit.InputEnded:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.Touch then
-			tiltRightBtn.ImageTransparency = 0
+			tiltRightFrame.BackgroundTransparency = 0.5
+			tiltRightIcon.ImageTransparency = 0.3
 			TiltRightActive = false
 		end
 	end)
+
 	function updateButtonSize()
 		local screenSize = parent.AbsoluteSize
 		local isSmallScreen = math.min(screenSize.X, screenSize.Y) <= 500
@@ -257,19 +320,24 @@ function CreateTiltButtons(parent)
 		local totalWidth = (buttonSize * 2) + (padding * 3)
 		buttonFrame.Size = UDim2.new(0, totalWidth, 0, buttonSize + (padding * 2))
 		buttonFrame.Position = UDim2.new(0, padding, 1, -(buttonSize + (padding * 2)))
-		tiltLeftBtn.Size = UDim2.new(0, buttonSize, 0, buttonSize)
-		tiltLeftBtn.Position = UDim2.new(0, padding, 0, padding)
-		tiltRightBtn.Size = UDim2.new(0, buttonSize, 0, buttonSize)
-		tiltRightBtn.Position = UDim2.new(0, padding + buttonSize + padding, 0, padding)
+		tiltLeftFrame.Size = UDim2.new(0, buttonSize, 0, buttonSize)
+		tiltLeftFrame.Position = UDim2.new(0, padding, 0, padding)
+		tiltRightFrame.Size = UDim2.new(0, buttonSize, 0, buttonSize)
+		tiltRightFrame.Position = UDim2.new(0, padding + buttonSize + padding, 0, padding)
 	end
+
 	parent:GetPropertyChangedSignal("AbsoluteSize"):Connect(updateButtonSize)
 	updateButtonSize()
+
 	GuiService.MenuOpened:Connect(function()
 		TiltLeftActive = false
 		TiltRightActive = false
-		tiltLeftBtn.ImageTransparency = 0
-		tiltRightBtn.ImageTransparency = 0
+		tiltLeftFrame.BackgroundTransparency = 0.5
+		tiltLeftIcon.ImageTransparency = 0.3
+		tiltRightFrame.BackgroundTransparency = 0.5
+		tiltRightIcon.ImageTransparency = 0.3
 	end)
+
 	return buttonFrame, tiltLeftBtn, tiltRightBtn
 end
 function CreateTouchControls()
