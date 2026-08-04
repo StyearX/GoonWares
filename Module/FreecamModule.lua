@@ -251,8 +251,8 @@ function CreateTiltButtons(parent)
 		icon.AnchorPoint = Vector2.new(0.5, 0.5)
 		icon.BackgroundTransparency = 1
 		icon.Image = iconId
-		icon.ImageColor3 = Color3.fromRGB(26, 26, 26)
-		icon.ImageTransparency = 0.6
+		icon.ImageColor3 = Color3.fromRGB(255, 255, 255)
+		icon.ImageTransparency = 0.7
 		icon.ZIndex = 16
 		icon.Parent = outerFrame
 
@@ -288,7 +288,8 @@ function CreateTiltButtons(parent)
 		if input.UserInputType == Enum.UserInputType.Touch and input.UserInputState == Enum.UserInputState.Begin then
 			tiltLeftFrame.BackgroundColor3 = Color3.fromRGB(128, 128, 128)
 			tiltLeftFrame.BackgroundTransparency = 0.2
-			tiltLeftIcon.ImageTransparency = 0
+			tiltLeftIcon.ImageColor3 = Color3.fromRGB(26, 26, 26)
+			tiltLeftIcon.ImageTransparency = 0.6
 			TiltLeftActive = true
 		end
 	end)
@@ -296,7 +297,8 @@ function CreateTiltButtons(parent)
 		if input.UserInputType == Enum.UserInputType.Touch then
 			tiltLeftFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 			tiltLeftFrame.BackgroundTransparency = 0.5
-			tiltLeftIcon.ImageTransparency = 0.6
+			tiltLeftIcon.ImageColor3 = Color3.fromRGB(255, 255, 255)
+			tiltLeftIcon.ImageTransparency = 0.7
 			TiltLeftActive = false
 		end
 	end)
@@ -304,7 +306,8 @@ function CreateTiltButtons(parent)
 		if input.UserInputType == Enum.UserInputType.Touch and input.UserInputState == Enum.UserInputState.Begin then
 			tiltRightFrame.BackgroundColor3 = Color3.fromRGB(128, 128, 128)
 			tiltRightFrame.BackgroundTransparency = 0.2
-			tiltRightIcon.ImageTransparency = 0
+			tiltRightIcon.ImageColor3 = Color3.fromRGB(26, 26, 26)
+			tiltRightIcon.ImageTransparency = 0.6
 			TiltRightActive = true
 		end
 	end)
@@ -312,7 +315,8 @@ function CreateTiltButtons(parent)
 		if input.UserInputType == Enum.UserInputType.Touch then
 			tiltRightFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 			tiltRightFrame.BackgroundTransparency = 0.5
-			tiltRightIcon.ImageTransparency = 0.6
+			tiltRightIcon.ImageColor3 = Color3.fromRGB(255, 255, 255)
+			tiltRightIcon.ImageTransparency = 0.7
 			TiltRightActive = false
 		end
 	end)
@@ -338,10 +342,12 @@ function CreateTiltButtons(parent)
 		TiltRightActive = false
 		tiltLeftFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 		tiltLeftFrame.BackgroundTransparency = 0.5
-		tiltLeftIcon.ImageTransparency = 0.6
+		tiltLeftIcon.ImageColor3 = Color3.fromRGB(255, 255, 255)
+		tiltLeftIcon.ImageTransparency = 0.7
 		tiltRightFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 		tiltRightFrame.BackgroundTransparency = 0.5
-		tiltRightIcon.ImageTransparency = 0.6
+		tiltRightIcon.ImageColor3 = Color3.fromRGB(255, 255, 255)
+		tiltRightIcon.ImageTransparency = 0.7
 	end)
 
 	return buttonFrame, tiltLeftBtn, tiltRightBtn
