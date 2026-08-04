@@ -212,7 +212,7 @@ function CreateTiltButtons(parent)
 
 	local function MakeTiltButton(iconId)
 		local outerFrame = Instance.new("Frame")
-		outerFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+		outerFrame.BackgroundColor3 = Color3.fromRGB(128, 128, 128)
 		outerFrame.BackgroundTransparency = 0.5
 		outerFrame.ZIndex = 15
 		outerFrame.Parent = parent
@@ -246,13 +246,13 @@ function CreateTiltButtons(parent)
 		innerStroke.Parent = innerFrame
 
 		local icon = Instance.new("ImageLabel")
-		icon.Size = UDim2.new(0.55, 0, 0.55, 0)
-		icon.Position = UDim2.new(0.5, 0, 0.5, 0)
+		icon.Size = UDim2.new(0.6, 0, 0.6, 0)
+		icon.Position = UDim2.new(0.5, 0, 0.48, 0)
 		icon.AnchorPoint = Vector2.new(0.5, 0.5)
 		icon.BackgroundTransparency = 1
 		icon.Image = iconId
-		icon.ImageColor3 = Color3.fromRGB(255, 255, 255)
-		icon.ImageTransparency = 0.3
+		icon.ImageColor3 = Color3.fromRGB(26, 26, 26)
+		icon.ImageTransparency = 0.6
 		icon.ZIndex = 16
 		icon.Parent = outerFrame
 
@@ -286,7 +286,7 @@ function CreateTiltButtons(parent)
 
 	tiltLeftHit.InputBegan:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.Touch and input.UserInputState == Enum.UserInputState.Begin then
-			tiltLeftFrame.BackgroundTransparency = 0.25
+			tiltLeftFrame.BackgroundTransparency = 0.2
 			tiltLeftIcon.ImageTransparency = 0
 			TiltLeftActive = true
 		end
@@ -294,13 +294,13 @@ function CreateTiltButtons(parent)
 	tiltLeftHit.InputEnded:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.Touch then
 			tiltLeftFrame.BackgroundTransparency = 0.5
-			tiltLeftIcon.ImageTransparency = 0.3
+			tiltLeftIcon.ImageTransparency = 0.6
 			TiltLeftActive = false
 		end
 	end)
 	tiltRightHit.InputBegan:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.Touch and input.UserInputState == Enum.UserInputState.Begin then
-			tiltRightFrame.BackgroundTransparency = 0.25
+			tiltRightFrame.BackgroundTransparency = 0.2
 			tiltRightIcon.ImageTransparency = 0
 			TiltRightActive = true
 		end
@@ -308,7 +308,7 @@ function CreateTiltButtons(parent)
 	tiltRightHit.InputEnded:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.Touch then
 			tiltRightFrame.BackgroundTransparency = 0.5
-			tiltRightIcon.ImageTransparency = 0.3
+			tiltRightIcon.ImageTransparency = 0.6
 			TiltRightActive = false
 		end
 	end)
@@ -333,9 +333,9 @@ function CreateTiltButtons(parent)
 		TiltLeftActive = false
 		TiltRightActive = false
 		tiltLeftFrame.BackgroundTransparency = 0.5
-		tiltLeftIcon.ImageTransparency = 0.3
+		tiltLeftIcon.ImageTransparency = 0.6
 		tiltRightFrame.BackgroundTransparency = 0.5
-		tiltRightIcon.ImageTransparency = 0.3
+		tiltRightIcon.ImageTransparency = 0.6
 	end)
 
 	return buttonFrame, tiltLeftBtn, tiltRightBtn
@@ -1441,7 +1441,7 @@ function DummyUI:createUI()
 	self.minimized = false
 	self.expandedSize = self.size
 
-	-- ── Layer 0: background frame (identik FloatingButton Frame) ──
+
 	self.mainFrame = Instance.new("Frame")
 	self.mainFrame.Name = "GoonWaresFreecamUI"
 	self.mainFrame.Size = self.size
@@ -1458,12 +1458,12 @@ function DummyUI:createUI()
 	mainCorner.CornerRadius = UDim.new(0, 12)
 	mainCorner.Parent = self.mainFrame
 
-	-- Gradient identik FloatingButton Gradient (color diupdate di RenderStepped)
+
 	self.mainBgGradient = Instance.new("UIGradient")
 	self.mainBgGradient.Rotation = 0
 	self.mainBgGradient.Parent = self.mainFrame
 
-	-- Stroke identik FloatingButton Stroke
+
 	self.mainStroke = Instance.new("UIStroke")
 	self.mainStroke.Thickness = 1.5
 	self.mainStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
@@ -1473,7 +1473,7 @@ function DummyUI:createUI()
 	self.strokeGradient.Rotation = 0
 	self.strokeGradient.Parent = self.mainStroke
 
-	-- Noise identik FloatingButton Noise (ZIndex negatif agar di belakang content)
+
 	self.noiseLayer = Instance.new("ImageLabel")
 	self.noiseLayer.Name = "_FCNoise"
 	self.noiseLayer.Image = "rbxassetid://9968344227"
@@ -1488,7 +1488,7 @@ function DummyUI:createUI()
 	noiseCorner.CornerRadius = UDim.new(0, 12)
 	noiseCorner.Parent = self.noiseLayer
 
-	-- GlassLayer identik FloatingButton GlassLayer
+
 	self.glassLayer = Instance.new("Frame")
 	self.glassLayer.Name = "_FCGlass"
 	self.glassLayer.Size = UDim2.fromScale(1, 1)
@@ -1508,7 +1508,7 @@ function DummyUI:createUI()
 	})
 	glassGradient.Parent = self.glassLayer
 
-	-- ── Layer 1: content frame (clips content saja, transparan) ──
+
 	self.contentFrame = Instance.new("Frame")
 	self.contentFrame.Name = "GoonWaresFreecamContent"
 	self.contentFrame.Size = self.size
@@ -1651,16 +1651,16 @@ function DummyUI:setupThemeReactivity()
 		local Fluent = self.Fluent
 		if not Fluent then return end
 
-		-- Sync contentFrame size/position/visible setiap frame
+
 		self.contentFrame.Size = self.mainFrame.Size
 		self.contentFrame.Position = self.mainFrame.Position
 		self.contentFrame.Visible = self.mainFrame.Visible
 
-		-- Transparansi identik FloatingButton StartFrameLoop
+
 		local Transparent = Fluent.WindowTransparent
 		self.mainFrame.BackgroundTransparency = Transparent and 0.27 or 0
 
-		-- Gradient dari ButtonGradients, identik FloatingButton
+
 		local Animated = Fluent.ShineEnabled == true
 		local Grad = Fluent:GetButtonGradient() or Fluent.ButtonGradients
 
@@ -1682,7 +1682,7 @@ function DummyUI:setupThemeReactivity()
 		self.mainBgGradient.Color = Grad.Background
 		self.strokeGradient.Color = Grad.Stroke
 
-		-- Accent sync untuk tab, toggle, slider
+
 		local shine = Fluent:GetShine()
 		local accent = (shine and shine.Accent) or Color3.fromRGB(100, 200, 255)
 		if accent ~= lastAccent then
