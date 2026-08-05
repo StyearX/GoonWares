@@ -328,65 +328,12 @@ function FloatingButton:Create(ButtonName, DisplayText, IsToggle, OnClick)
         InputFrame.Visible = Mode == "Input" and IsVisible
     end
 
-    local function ApplyInputShape(Circle, S)
-        InputFrame:SetAttribute("IsCircle", Circle)
-        if Circle then
-            InputFrame.Size = UDim2.new(0, S, 0, S)
-            InputFrameCorner.CornerRadius = UDim.new(1, 0)
-            InputInnerFrameCorner.CornerRadius = UDim.new(1, 0)
-        else
-            local Entry = self.FloatButtonSizes[ButtonName]
-            local LiveW = Entry and Entry.W or SavedW
-            local LiveH = Entry and Entry.H or SavedH
-            InputFrame.Size = UDim2.new(0, LiveW, 0, LiveH)
-            InputFrameCorner.CornerRadius = UDim.new(0, 4)
-            InputInnerFrameCorner.CornerRadius = UDim.new(0, 4)
-        end
-    end
-
     local Holding, HoldStart, HideAt = false, 0, 0
     local OriginalDisplayText = DisplayText
     local IsClicked = false
 
     Frame:SetAttribute("IsCircle", false)
     InputFrame:SetAttribute("IsCircle", false)
-
-    local function ApplyShape(Circle)
-        Frame:SetAttribute("IsCircle", Circle)
-        local S = math.min(Frame.AbsoluteSize.X, Frame.AbsoluteSize.Y)
-
-        if Circle then
-            Frame.Size = UDim2.new(0, S, 0, S)
-            local R = UDim.new(1, 0)
-            Corner.CornerRadius = R
-            NoiseCorner.CornerRadius = R
-            GlassCorner.CornerRadius = R
-            FluBtn.TextWrapped = true
-            FluBtn.TextScaled = true
-            FluBtn.TextSize = math.floor(S * 0.45)
-            FluToggle.Text = "▢"
-        else
-            local Entry = self.FloatButtonSizes[ButtonName]
-            local LiveW = Entry and Entry.W or SavedW
-            local LiveH = Entry and Entry.H or SavedH
-            Frame.Size = UDim2.new(0, LiveW, 0, LiveH)
-            local R = UDim.new(0, 15)
-            Corner.CornerRadius = R
-            NoiseCorner.CornerRadius = R
-            GlassCorner.CornerRadius = R
-            FluBtn.TextWrapped = false
-            FluBtn.TextScaled = false
-            FluBtn.TextSize = 24
-            FluToggle.Text = "○"
-        end
-
-        local InputS = math.min(InputFrame.AbsoluteSize.X, InputFrame.AbsoluteSize.Y)
-        ApplyInputShape(Circle, InputS)
-        InBtn.TextWrapped = Circle
-        InBtn.TextScaled = Circle
-        if not Circle then InBtn.TextSize = 24 end
-        InToggle.Text = Circle and "▢" or "○"
-    end
 
     local FluBtn = Instance.new("TextButton")
     FluBtn.Size = UDim2.new(1, 0, 1, 0)
@@ -432,6 +379,59 @@ function FloatingButton:Create(ButtonName, DisplayText, IsToggle, OnClick)
     InToggle.ZIndex = -6
     InToggle.Parent = InputFrame
     Instance.new("UICorner", InToggle).CornerRadius = UDim.new(1, 0)
+
+    local function ApplyInputShape(Circle, S)
+        InputFrame:SetAttribute("IsCircle", Circle)
+        if Circle then
+            InputFrame.Size = UDim2.new(0, S, 0, S)
+            InputFrameCorner.CornerRadius = UDim.new(1, 0)
+            InputInnerFrameCorner.CornerRadius = UDim.new(1, 0)
+        else
+            local Entry = self.FloatButtonSizes[ButtonName]
+            local LiveW = Entry and Entry.W or SavedW
+            local LiveH = Entry and Entry.H or SavedH
+            InputFrame.Size = UDim2.new(0, LiveW, 0, LiveH)
+            InputFrameCorner.CornerRadius = UDim.new(0, 4)
+            InputInnerFrameCorner.CornerRadius = UDim.new(0, 4)
+        end
+    end
+
+    local function ApplyShape(Circle)
+        Frame:SetAttribute("IsCircle", Circle)
+        local S = math.min(Frame.AbsoluteSize.X, Frame.AbsoluteSize.Y)
+
+        if Circle then
+            Frame.Size = UDim2.new(0, S, 0, S)
+            local R = UDim.new(1, 0)
+            Corner.CornerRadius = R
+            NoiseCorner.CornerRadius = R
+            GlassCorner.CornerRadius = R
+            FluBtn.TextWrapped = true
+            FluBtn.TextScaled = true
+            FluBtn.TextSize = math.floor(S * 0.45)
+            FluToggle.Text = "▢"
+        else
+            local Entry = self.FloatButtonSizes[ButtonName]
+            local LiveW = Entry and Entry.W or SavedW
+            local LiveH = Entry and Entry.H or SavedH
+            Frame.Size = UDim2.new(0, LiveW, 0, LiveH)
+            local R = UDim.new(0, 15)
+            Corner.CornerRadius = R
+            NoiseCorner.CornerRadius = R
+            GlassCorner.CornerRadius = R
+            FluBtn.TextWrapped = false
+            FluBtn.TextScaled = false
+            FluBtn.TextSize = 24
+            FluToggle.Text = "○"
+        end
+
+        local InputS = math.min(InputFrame.AbsoluteSize.X, InputFrame.AbsoluteSize.Y)
+        ApplyInputShape(Circle, InputS)
+        InBtn.TextWrapped = Circle
+        InBtn.TextScaled = Circle
+        if not Circle then InBtn.TextSize = 24 end
+        InToggle.Text = Circle and "▢" or "○"
+    end
 
     if self.FloatingButtonManager then
         self.FloatingButtonManager:AddButton(ButtonName, Frame, false)
