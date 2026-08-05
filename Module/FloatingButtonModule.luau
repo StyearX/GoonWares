@@ -182,7 +182,7 @@ local function BuildInputFrame(ButtonName, SavedW, SavedH)
     Frame.Parent = ScreenGui
 
     local FrameCorner = Instance.new("UICorner")
-    FrameCorner.CornerRadius = UDim.new(0, 4)
+    FrameCorner.CornerRadius = UDim.new(0, 15)
     FrameCorner.Parent = Frame
 
     local OuterStroke = Instance.new("UIStroke")
@@ -200,7 +200,7 @@ local function BuildInputFrame(ButtonName, SavedW, SavedH)
     InnerFrame.Parent = Frame
 
     local InnerFrameCorner = Instance.new("UICorner")
-    InnerFrameCorner.CornerRadius = UDim.new(0, 4)
+    InnerFrameCorner.CornerRadius = UDim.new(0, 15)
     InnerFrameCorner.Parent = InnerFrame
 
     local InnerStroke = Instance.new("UIStroke")
@@ -295,6 +295,11 @@ function FloatingButton:Create(ButtonName, DisplayText, IsToggle, OnClick)
         BuildInputFrame(ButtonName, SavedW, SavedH)
 
     local StopLoop = StartFrameLoop(Frame, Gradient, GradientStroke, Stroke, Noise, NoiseCorner, Corner, GlassLayer, GlassCorner, Fluent)
+    Frame:SetAttribute("CurrentMode", "Fluent")
+    local InputFrameRef = Instance.new("ObjectValue")
+    InputFrameRef.Name = "_InputFrame"
+    InputFrameRef.Value = InputFrame
+    InputFrameRef.Parent = Frame
 
     Frame.AncestryChanged:Connect(function()
         if not Frame.Parent then
@@ -323,6 +328,7 @@ function FloatingButton:Create(ButtonName, DisplayText, IsToggle, OnClick)
         SyncPosition()
         CurrentMode = Mode
         self.ButtonModes[ButtonName] = Mode
+        Frame:SetAttribute("CurrentMode", Mode)
         local IsVisible = Frame.Visible or InputFrame.Visible
         Frame.Visible = Mode == "Fluent" and IsVisible
         InputFrame.Visible = Mode == "Input" and IsVisible
@@ -391,8 +397,8 @@ function FloatingButton:Create(ButtonName, DisplayText, IsToggle, OnClick)
             local LiveW = Entry and Entry.W or SavedW
             local LiveH = Entry and Entry.H or SavedH
             InputFrame.Size = UDim2.new(0, LiveW, 0, LiveH)
-            InputFrameCorner.CornerRadius = UDim.new(0, 4)
-            InputInnerFrameCorner.CornerRadius = UDim.new(0, 4)
+            InputFrameCorner.CornerRadius = UDim.new(0, 15)
+            InputInnerFrameCorner.CornerRadius = UDim.new(0, 15)
         end
     end
 
@@ -580,7 +586,17 @@ function FloatingButton:AddModeDropdown(Section, ButtonName, SetMode)
 end
 
 function FloatingButton.SetVisible(Frame, State)
-    if Frame then Frame.Visible = State end
+    if not Frame then return end
+    local Mode = Frame:GetAttribute("CurrentMode") or "Fluent"
+    local InputRef = Frame:FindFirstChild("_InputFrame")
+    local InputFrame = InputRef and InputRef.Value
+    if Mode == "Input" then
+        Frame.Visible = false
+        if InputFrame then InputFrame.Visible = State end
+    else
+        Frame.Visible = State
+        if InputFrame then InputFrame.Visible = false end
+    end
 end
 
 function FloatingButton.SetText(Button, Text)
