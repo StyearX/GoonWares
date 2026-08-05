@@ -482,10 +482,12 @@ function FloatingButton:Create(ButtonName, DisplayText, IsToggle, OnClick)
     end)
     InBtn.InputEnded:Connect(function(Input)
         if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
-            InputFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-            InputFrame.BackgroundTransparency = 0.5
-            InBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-            InBtn.TextTransparency = 0.7
+            if not IsClicked then
+                InputFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+                InputFrame.BackgroundTransparency = 0.5
+                InBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+                InBtn.TextTransparency = 0.7
+            end
             if Holding then
                 Holding = false
                 if tick() - HoldStart >= 0.6 then
@@ -517,6 +519,10 @@ function FloatingButton:Create(ButtonName, DisplayText, IsToggle, OnClick)
                     FluBtn.Text = OriginalDisplayText
                     InBtn.Text = OriginalDisplayText
                     IsClicked = false
+                    InputFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+                    InputFrame.BackgroundTransparency = 0.5
+                    InBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+                    InBtn.TextTransparency = 0.7
                 end
             end)
             if ClickCallback then task.spawn(ClickCallback, Button) end
